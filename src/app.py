@@ -1,15 +1,11 @@
 import mapGenerator as mg
-import matplotlib.pyplot as plt
+import mapPlotter as mp
 
-maps = [mg.generateMap(),
-mg.generateMap(octaves=2),
-mg.generateMap(octaves=3),
-mg.generateMap(octaves=4)]
+scales = [500, 250, 125, 60]
+octaves = [1, 2, 3, 4]
 
-for i, map in enumerate(maps):
-    plt.subplot(2, 2, i + 1)
-    plt.title("octaves = " + str(i + 1))
-    plt.imshow(map, cmap='gray')
-    plt.colorbar()
+mapSetScales = [mg.generateMap(scale=s, octaves=1) for s in scales]
+mapSetOctaves = [mg.generateMap(scale=200, octaves=o) for o in octaves]
 
-plt.show()
+mp.plotMaps(mapSetScales, ('scale', scales))
+# mp.plotMaps(mapSetOctaves, ('octaves', octaves))
