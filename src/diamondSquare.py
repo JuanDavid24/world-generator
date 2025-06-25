@@ -1,4 +1,3 @@
-import random as rnd
 import numpy as np
 
 def diamondSquare(n, roughness=1, seed=None):
@@ -7,7 +6,9 @@ def diamondSquare(n, roughness=1, seed=None):
     
     # Initialize the corners of the grid with the given seed values
     setInitialCorners(map, seed)
-    diamondStep(map, 0, 0, size)
+    # diamondStep(map, 0, 0, size)
+    squareStep(map, 0, 0, size) 
+
     return map
 
 def setInitialCorners(map, seed=None):
@@ -18,30 +19,60 @@ def setInitialCorners(map, seed=None):
     map[0, last_index] = seed[1]
     map[last_index, 0] = seed[2]
     map[last_index, last_index] = seed[3]
-    
-    """  print("Initial corners set:")
-    print(map) """
     return map
 
-def diamondStep(map, x, y, size, roughness=1): 
-    half = size // 2
-    avg = (map[x, y] + map[x, size-1] + map[size-1, y] + map[size-1, size-1]) / 4
+def diamondStep(map, x, y, chunkSize, roughness=1): 
+    '''x, y: top-left corner of first chunk'''
+    mapSize = map.shape[0]
+    half = chunkSize // 2
 
-    """ print(f"Diamond step at ({x}, {y}) with size {size}, average: {avg}")
-    print(f"point {x, y} = {map[x, y]}")
-    print(f"point {x, size-1} = {map[x, size-1]}")
-    print(f"point {size-1, y} = {map[size-1, y]}")
-    print(f"point {size-1, size-1} = {map[size-1, size-1]}") """
-
-    # calculate the midpoint value
-    randomValue = np.random.uniform(-1, 1) * roughness # random value scaled by roughness
-    value = min(1, max(0, randomValue + avg)) # ensure value is between 0 and 1
-    map[x + half, y + half] = value
+    for x in range(0, mapSize-1, chunkSize-1):
+        for y in range(0, mapSize-1, chunkSize-1):
+            # calculate the diamond midpoint value
+            avg = (map[y, x] + map[chunkSize-1, x] + map[y, chunkSize-1] + map[chunkSize-1, chunkSize-1]) / 4
+            value = np.random.uniform(-1, 1) * roughness # random value scaled by roughness
+            #value = min(1, max(0, random + avg)) # ensure value is between 0 and 1
+            map[y + half, x + half] = avg + value
 
     """ print(f"random value {randomValue}")
     print(f"midpoint {x + half, y + half} = {map[x + half, y + half]}") """
 
     return map
 
-map = diamondSquare(2)
+def squareStep(map, chunkSize, roughness=1):
+    size = map.shape[0]
+    half = chunkSize // 2
+    for y in range(0, size, half):
+        x0 = int(((y / half + 1) % 2) * half)
+        for x in range(x0, size, chunkSize-1):
+            map = calculateSquareValue(map, x, y, chunkSize, roughness )
+    return map
+
+def calculateSquareValue(map, x, y, chunkSize, roughness=1):
+    neighborsValues = getSquareNeighborsValues(map, x, y, chunkSize)
+    avg = sum(neighborsValues) / len(neighborsValues)
+    value = np.random.uniform(-1, 1) * roughness # random value scaled by roughness
+    #value = min(1, max(0, random + avg)) # ensure value is between 0 and 1
+    map[y, x] = avg + value
+    return map
+
+def getSquareNeighborsValues(map, x, y, chunkSize):
+    mapSize = map.shape[0]
+    half = chunkSize // 2
+
+    # Orthogonal neighbours of point (x,y)
+    top = (y-half, x)
+    bottom = (y+half, x)
+    left = (y, x-half)
+    right = (y, x+half)
+
+    neighbors = [p for p in [top, bottom, left, right] if pointIsInMap(p[1], p[0], mapSize)]  # extract map values for neighbour points, discard points that fall outside the grid
+    neighborsValues = [map[p] for p in neighbors]
+    return neighborsValues
+
+def pointIsInMap(x, y, mapSize):
+    # checks if point (x, y) is within map bounds
+    return 0 <= x <= mapSize-1 and 0 <= y <= mapSize-1
+
+# map = diamondSquare(2)
 print(map)
