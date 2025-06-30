@@ -5,12 +5,12 @@ def diamondSquare(n, roughness=1, seed=None):
     map = np.zeros((size, size))
 
     # Initialize the corners of the grid with the given seed values
-    setInitialCorners(map, seed)
+    map = setInitialCorners(map, seed)
 
     chunk_size = size
     while n > 0:
-        diamondStep(map, chunk_size, roughness)
-        squareStep(map, chunk_size, roughness)
+        map = diamondStep(map, chunk_size, roughness)
+        map = squareStep(map, chunk_size, roughness)
         n -= 1
         chunk_size = 2**n + 1
         roughness /= 2
@@ -34,9 +34,13 @@ def diamondStep(map, chunkSize, roughness=1):
     for x in range(0, mapSize-1, chunkSize-1):
         for y in range(0, mapSize-1, chunkSize-1):
             # calculate the diamond midpoint value
-            avg = (map[y, x] + map[chunkSize-1, x] + map[y, chunkSize-1] + map[chunkSize-1, chunkSize-1]) / 4
-            value = np.random.uniform(-1, 1) * roughness # random value scaled by roughness
-            #value = min(1, max(0, random + avg)) # ensure value is between 0 and 1
+            avg = (
+                map[y, x] + 
+                map[y + chunkSize - 1, x] + 
+                map[y, x + chunkSize - 1] + 
+                map[y + chunkSize - 1, x + chunkSize - 1]
+                ) / 4
+            value = np.random.uniform(-0.5, 0.5) * roughness # random value scaled by roughness
             map[y + half, x + half] = avg + value
     return map
 
@@ -53,7 +57,6 @@ def calculateSquareValue(map, x, y, chunkSize, roughness=1):
     neighborsValues = getSquareNeighborsValues(map, x, y, chunkSize)
     avg = sum(neighborsValues) / len(neighborsValues)
     value = np.random.uniform(-1, 1) * roughness # random value scaled by roughness
-    #value = min(1, max(0, random + avg)) # ensure value is between 0 and 1
     map[y, x] = avg + value
     return map
 
