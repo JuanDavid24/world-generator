@@ -53,10 +53,10 @@ neighborsValuesC = [
     [0.2, 0.7, 0.5]          # (4, 3)
 ]
 
-@pytest.mark.parametrize("map, x , y, chunkSize, points", [(mapA, xA, yA, chunkSizeA, pointsA), 
-                                                           (mapB, xB, yB, chunkSizeB, pointsB)])
-def test_diamondStep(map, x, y, chunkSize, points):
-    newMap = ds.diamondStep(map, x, y, chunkSize)
+@pytest.mark.parametrize("map, chunkSize, points", [(mapA, chunkSizeA, pointsA), 
+                                                           (mapB, chunkSizeB, pointsB)])
+def test_diamondStep(map, chunkSize, points):
+    newMap = ds.diamondStep(map, chunkSize)
     for p in points:
         px, py = p
         assert newMap[(py, px)] != 0
@@ -88,5 +88,5 @@ def test_diamondSquare(n, size, roughness, seed):
     # check if matrix is completelly populated
     for row in map:
         for p in row:
-            assert p is not 0.0
+            assert p != 0.0
     
