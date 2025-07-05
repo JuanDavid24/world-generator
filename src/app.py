@@ -13,16 +13,16 @@ octaves = [1, 2, 3, 4]
 # ----- diamond-square -----
 
 ns = [3, 5, 7, 10]
-rs = [1, 0.5, 0.125, 0.0675] 
+rs = [2, 1, 0.5, 0.125] 
 
 # single map plot
 # ds_map = mg.diamond_square_map(n=7)
 # mp.plot_map(ds_map)
 
 # variating n
-# ds_maps = [mg.diamond_square_map(n) for n in ns]
-# mp.plot_maps(ds_maps, ('N', ns))
+ds_maps = [mg.diamond_square_map(n) for n in ns]
+mp.plot_maps(ds_maps, ('N', ns))
 
 # variating roughhness
-ds_maps = [mg.diamond_square_map(5) for r in rs]
-mp.plot_maps(ds_maps, ('roughness', rs))
+# ds_maps = [mg.diamond_square_map(5, roughness=r) for r in rs]
+# mp.plot_maps(ds_maps, ('roughness', rs))
