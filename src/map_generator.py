@@ -1,6 +1,6 @@
 import numpy as np
 import noise
-from diamondSquare import diamondSquare as ds
+from src.diamond_square import diamond_square as ds
 
 def perlin_map(shape = (1024, 1024), scale = 100, octaves = 1, persistence = 0.5, lacunarity = 2.0):
     map = np.zeros(shape)

@@ -1,1 +1,1 @@
-from src import diamondSquare
+from src import diamond_square

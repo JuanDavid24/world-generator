@@ -1,5 +1,5 @@
-import mapGenerator as mg
-import mapPlotter as mp
+import src.map_generator as mg
+import src.map_plotter as mp
 
 scales = [500, 250, 125, 60]
 octaves = [1, 2, 3, 4]
