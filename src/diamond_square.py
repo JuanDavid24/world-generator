@@ -1,32 +1,35 @@
 import numpy as np
 
-def diamond_square(n, roughness=1, seed=None):
+def diamond_square(n, roughness=1, seed=None, corners=None):
     size = 2**n + 1
     map = np.zeros((size, size))
+    
+    # Create a random number generator with provided seed (if seed is None, it will use a random seed)
+    rng = np.random.default_rng(seed)
 
     # Initialize the corners of the grid with the given seed values
-    map = set_corners(map, seed)
+    map = set_corners(map, rng, corners)
 
     chunk_size = size
     while n > 0:
-        map = diamond_step(map, chunk_size, roughness)
-        map = square_step(map, chunk_size, roughness)
+        map = diamond_step(map, chunk_size, rng, roughness)
+        map = square_step(map, chunk_size, rng, roughness)
         n -= 1
         chunk_size = 2**n + 1
         roughness /= 2
     return map
 
-def set_corners(map, seed=None):
-    if seed is None:
-        seed = np.random.rand(4)       
+def set_corners(map, rng, corners=None):
+    if corners is None:
+        corners = rng.random(4)   
     last_index = map.shape[0] - 1
-    map[0, 0] = seed[0]                     # top-left
-    map[0, last_index] = seed[1]            # top-right
-    map[last_index, 0] = seed[2]            # bottom-left
-    map[last_index, last_index] = seed[3]   # bottom-right
+    map[0, 0] = corners[0]                     # top-left
+    map[0, last_index] = corners[1]            # top-right
+    map[last_index, 0] = corners[2]            # bottom-left
+    map[last_index, last_index] = corners[3]   # bottom-right
     return map
 
-def diamond_step(map, chunk_size, roughness=1): 
+def diamond_step(map, chunk_size, rng, roughness=1): 
     '''x, y: top-left corner of first chunk'''
     map_size = map.shape[0]
     half = chunk_size // 2
@@ -40,23 +43,23 @@ def diamond_step(map, chunk_size, roughness=1):
                 map[y, x + chunk_size - 1] + 
                 map[y + chunk_size - 1, x + chunk_size - 1]
                 ) / 4
-            value = np.random.uniform(-0.5, 0.5) * roughness # random value scaled by roughness
+            value = rng.uniform(-1,1) * roughness # random value scaled by roughness
             map[y + half, x + half] = avg + value
     return map
 
-def square_step(map, chunk_size, roughness=1):
+def square_step(map, chunk_size, rng, roughness=1):
     size = map.shape[0]
     half = chunk_size // 2
     for y in range(0, size, half):
         x0 = int(((y / half + 1) % 2) * half)
         for x in range(x0, size, chunk_size-1):
-            map = calculate_square_value(map, x, y, chunk_size, roughness )
+            map = calculate_square_value(map, x, y, chunk_size, rng, roughness)
     return map
 
-def calculate_square_value(map, x, y, chunk_size, roughness=1):
+def calculate_square_value(map, x, y, chunk_size, rng, roughness=1):
     neighbor_values = get_square_neighbor_values(map, x, y, chunk_size)
     avg = sum(neighbor_values) / len(neighbor_values)
-    value = np.random.uniform(-1, 1) * roughness # random value scaled by roughness
+    value = rng.uniform(-1,1) * roughness # random value scaled by roughness
     map[y, x] = avg + value
     return map
 
