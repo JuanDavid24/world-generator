@@ -43,8 +43,8 @@ def diamond_step(map, chunk_size, rng, roughness=1):
                 map[y, x + chunk_size - 1] + 
                 map[y + chunk_size - 1, x + chunk_size - 1]
                 ) / 4
-            value = rng.uniform(-1,1) * roughness # random value scaled by roughness
-            map[y + half, x + half] = avg + value
+            value = rng.uniform(-0.5, 0.5) * roughness # random value scaled by roughness
+            map[y + half, x + half] = np.clip(avg + value, 0, 1)
     return map
 
 def square_step(map, chunk_size, rng, roughness=1):
@@ -59,8 +59,8 @@ def square_step(map, chunk_size, rng, roughness=1):
 def calculate_square_value(map, x, y, chunk_size, rng, roughness=1):
     neighbor_values = get_square_neighbor_values(map, x, y, chunk_size)
     avg = sum(neighbor_values) / len(neighbor_values)
-    value = rng.uniform(-1,1) * roughness # random value scaled by roughness
-    map[y, x] = avg + value
+    value = rng.uniform(-0.5, 0.5) * roughness # random value scaled by roughness
+    map[y, x] = np.clip(avg + value, 0, 1)
     return map
 
 def get_square_neighbor_values(map, x, y, chunk_size):

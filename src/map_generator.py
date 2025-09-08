@@ -4,7 +4,6 @@ from diamond_square import diamond_square as ds
 
 def perlin_map(shape = (1024, 1024), scale = 100, octaves = 1, persistence = 0.5, lacunarity = 2.0):
     map = np.zeros(shape)
-
     for i in range(shape[0]):
         for j in range(shape[1]):
             map[i][j] = noise.pnoise2(i/scale, 
@@ -17,7 +16,7 @@ def perlin_map(shape = (1024, 1024), scale = 100, octaves = 1, persistence = 0.5
 
 def diamond_square_map(n, roughness=1, seed=None, corners=None):
     map = ds(n, roughness, seed, corners)
-    return normalize_map(map)
+    return map
 
 def normalize_map(map):
     return (map - map.min()) / (map.max() - map.min())
