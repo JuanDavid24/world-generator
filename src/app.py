@@ -2,14 +2,38 @@ import map_generator as mg
 import map_plotter as mp
 
 # ----- perlin noise -----
-scales = [500, 250, 125, 60]
+scales = [100, 200, 400, 800]
 octaves = [1, 2, 3, 4]
+seeds = [1, 2, 3, 4]
+persistences = [0.3, 0.5, 0.7, 0.9]
+lacunarities = [2, 4, 6, 8]
 
-# mapSetScales = [mg.generateMap(scale=s, octaves=1) for s in scales]
-# mapSetOctaves = [mg.generateMap(scale=200, octaves=o) for o in octaves]
+# single map plot
+# mp.plot_map(mg.perlin_map(scale=400, octaves=7, seed=123, normalized=False), min=-1, max=1, title="Perlin Map without normalization")
+# mp.plot_map(mg.perlin_map(scale=400, octaves=7, seed=123, normalized=True), min=-1, max=1, title="Perlin Map normalized")
 
-# mp.plotMaps(mapSetScales, ('scale', scales))
-# mp.plotMaps(mapSetOctaves, ('octaves', octaves))
+# variating scale
+# pn_maps_scales = [mg.perlin_map(scale=s, seed=seeds[0]) for s in scales]
+# mp.plot_maps(pn_maps_scales, ('scale', scales), min=-1, max=1)
+
+# variating octaves
+# normalized vs non-normalized
+# pn_maps_octaves = [mg.perlin_map(scale=400, octaves=o, seed=seeds[0], normalized=False) for o in octaves]
+# mp.plot_maps(pn_maps_octaves, ('octaves', octaves), min=-1, max=1, title="Maps variating octaves, with same seed, non-normalized")
+# pn_maps_octaves = [mg.perlin_map(scale=400, octaves=o, seed=seeds[0], normalized=True) for o in octaves]
+# mp.plot_maps(pn_maps_octaves, ('octaves', octaves), min=-1, max=1, title="Maps variating octaves, with same seed, normalized")
+
+# variating persistence
+# pn_maps_persistence = [mg.perlin_map(scale=400, octaves=6, persistence=p, seed=seeds[1], normalized=True) for p in persistences]
+# mp.plot_maps(pn_maps_persistence, ('persistence', persistences), min=-1, max=1)
+
+# variating lacunarity
+# pn_maps_lacunarity = [mg.perlin_map(scale=400, octaves= 6, lacunarity=l, seed=seeds[2], normalized=True) for l in lacunarities]
+# mp.plot_maps(pn_maps_lacunarity, ('lacunarity', lacunarities), min=-1, max=1)
+
+# variating seed
+pn_maps_seed = [mg.perlin_map(scale=400, octaves=3, seed=s, normalized=True) for s in seeds]
+mp.plot_maps(pn_maps_seed, ('seed', seeds), min=-1, max=1)
 
 # ----- diamond-square -----
 ns = [3, 5, 7, 10]
