@@ -42,10 +42,59 @@ l_sys_c2 = {
     "axiom": "F"
 }
 
+l_sys_d = {
+    "ruleset": {
+        "X": "F[+X]F[-X]+X",
+        "F": "FF"
+    },
+    "axiom": "X"
+}
+
+l_sys_d2 = {
+    "ruleset": {
+        "X": "F[+XL]F[-XL]+X",
+        "F": "FF"
+    },
+    "axiom": "X"
+}
+
+l_sys_e = {
+    "ruleset": {
+        "X": "F[+X][-X]FX",
+        "F": "FF"
+    },
+    "axiom": "X"
+}
+
+l_sys_e2 = {
+    "ruleset": {
+        "X": "F[+XL][-XL]FXL",
+        "F": "FF"
+    },
+    "axiom": "X"
+}
+
+l_sys_f = {
+    "ruleset": {
+        "X": "F-[[X]+X]+F[+FX]-X",
+        "F": "FF"
+    },
+    "axiom": "X"
+}
+
+l_sys_f2 = {
+    "ruleset": {
+        "X": "F-[[X]+XL]+F[+FXL]-X",
+        "F": "FF"
+    },
+    "axiom": "X"
+}
+
 color_fucsia = "#FF0080"
 color_corn = "#FBEC5D"
 color_olive = "#808000"
 color_darkcyan = "#18848e"
+color_lightgray = "#e8e9eb"
 
 # sentence_a = lsys.sentence_generator(l_sys_a["axiom"], l_sys_a["ruleset"], 3)
 # lsys.plant_plotter(sentence_a, step=30, angle=30)
@@ -65,3 +114,20 @@ color_darkcyan = "#18848e"
 # sentence_c2 = lsys.sentence_generator(l_sys_c2["axiom"], l_sys_c2["ruleset"], 4)
 # lsys.plant_plotter(sentence_c2, step=15, angle=22.5, leaf_length=2, leaf_width=0.6, leaf_color=color_corn, branch_color=color_olive, animation=False)
 
+# sentence_d = lsys.sentence_generator(l_sys_d["axiom"], l_sys_d["ruleset"], 7)
+# lsys.plant_plotter(sentence_d, step=3, angle=20, branch_color=color_olive, animation=False)
+
+# sentence_d2 = lsys.sentence_generator(l_sys_d2["axiom"], l_sys_d2["ruleset"], 7)
+# lsys.plant_plotter(sentence_d2, step=3, angle=20, leaf_length=0.4, leaf_width=0.2, leaf_color=color_darkcyan, branch_color=color_olive, animation=False)
+
+# sentence_e = lsys.sentence_generator(l_sys_e["axiom"], l_sys_e["ruleset"], 7)
+# lsys.plant_plotter(sentence_e, step=3, angle=25.7, branch_color=color_corn, animation=False)
+
+# sentence_e2 = lsys.sentence_generator(l_sys_e2["axiom"], l_sys_e2["ruleset"], 7)
+# lsys.plant_plotter(sentence_e2, step=3, angle=20, leaf_length=0.4, leaf_width=0.9, leaf_color=color_lightgray, branch_color=color_corn, animation=False)
+
+# sentence_f = lsys.sentence_generator(l_sys_f["axiom"], l_sys_f["ruleset"], 7)
+# lsys.plant_plotter(sentence_f, step=3, angle=25.7, branch_color=color_darkcyan, animation=False)
+
+# sentence_f2 = lsys.sentence_generator(l_sys_f2["axiom"], l_sys_f2["ruleset"], 7)
+# lsys.plant_plotter(sentence_f2, step=2.5, angle=20, leaf_length=0.6, leaf_width=0.2, leaf_color=color_fucsia, branch_color=color_darkcyan, animation=False)
