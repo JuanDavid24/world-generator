@@ -1,7 +1,7 @@
 import turtle as tr
 
 def sentence_generator(axiom, rules, n):
-    for i in range(n):
+    for _ in range(n):
         sentence = ""
         for symbol in axiom:
             if symbol in rules:
