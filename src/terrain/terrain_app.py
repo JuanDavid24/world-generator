@@ -1,5 +1,5 @@
-import map_generator as mg
-import map_plotter as mp
+import terrain_generator as mg
+import terrain_plotter as mp
 
 # ----- perlin noise -----
 scales = [100, 200, 400, 800]

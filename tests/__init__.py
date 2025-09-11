@@ -1,1 +1,0 @@
-from src import diamond_square

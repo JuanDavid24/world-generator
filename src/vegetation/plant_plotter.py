@@ -1,16 +1,5 @@
 import turtle as tr
 
-def sentence_generator(axiom, rules, n):
-    for _ in range(n):
-        sentence = ""
-        for symbol in axiom:
-            if symbol in rules:
-                sentence += rules[symbol]
-            else: 
-                sentence += symbol
-        axiom = sentence
-    return sentence                
-
 def plant_plotter(sentence, step, angle, speed=6, branch_color="white", leaf_color="green", leaf_width=1.0, leaf_length=1.0, animation=True):
     # setup
     screen = tr.Screen()
