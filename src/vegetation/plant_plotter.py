@@ -1,6 +1,6 @@
 import turtle as tr
 
-def plant_plotter(sentence, step, angle, speed=6, branch_color="white", leaf_color="green", leaf_width=1.0, leaf_length=1.0, animation=True):
+def plant_plotter(sentence, step, angle, decay=1, speed=6, branch_color="white", leaf_color="green", leaf_width=1.0, leaf_length=1.0, animation=True):
     # setup
     screen = tr.Screen()
     window_w = screen.window_width()
@@ -20,16 +20,22 @@ def plant_plotter(sentence, step, angle, speed=6, branch_color="white", leaf_col
         match symbol:                
             case "F":
                 tr.forward(step)
-            case "+":
-                tr.right(angle)
+            case "G":
+                tr.penup()
+                tr.forward(step)
+                tr.pendown()
             case "-":
+                tr.right(angle)
+            case "+":
                 tr.left(angle)
             case "[":
                 turtle_stack.append((tr.pos(), tr.heading()))
+                step *= decay
             case "]":
                 (target_x, target_y), heading = turtle_stack.pop()
                 tr.teleport(target_x, target_y)
                 tr.seth(heading)
+                step /= decay
             case "L":
                 tr.color(leaf_color)
                 tr.stamp()
