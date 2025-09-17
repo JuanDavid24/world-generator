@@ -62,5 +62,5 @@ ss = [123, 456, 789, 101112]
 # ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=123, corners=None))
 # ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=123, corners=None))
 # ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=123, corners=cs))
-# ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=123, corners=cs))
-# mp.plot_maps(ds_maps_cr, ('seed/corners', [(123, None), (123, None), (123, cs), (456, cs)]), title="Maps variating corners")
+# ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=456, corners=cs))
+# mp.plot_maps(ds_maps_cr, ('seed/corners', [(123, None), (123, None), (123, cs), (456, cs)]), title="Maps variating seed and corners")
