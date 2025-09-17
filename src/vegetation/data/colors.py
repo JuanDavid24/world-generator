@@ -1,0 +1,5 @@
+fucsia = "#FF0080"
+corn = "#FBEC5D"
+olive = "#808000"
+darkcyan = "#18848e"
+lightgray = "#e8e9eb"
