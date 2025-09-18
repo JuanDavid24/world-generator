@@ -4,10 +4,16 @@ def diamond_square(n, roughness=1, seed=None, corners=None):
     size = 2**n + 1
     map = np.zeros((size, size))
     
-    # Create a random number generator with provided seed (if seed is None, it will use a random seed)
+    if seed is None:
+        # Create a random seed between 0 and 2^31
+        seed = np.random.randint(0, 2**31)
+        
+    # Initialize random number generator with seed
     rng = np.random.default_rng(seed)
 
     # Initialize the corners of the grid with the given seed values
+    if corners is None:
+        corners = rng.random(4)
     map = set_corners(map, rng, corners)
 
     chunk_size = size
@@ -17,11 +23,9 @@ def diamond_square(n, roughness=1, seed=None, corners=None):
         n -= 1
         chunk_size = 2**n + 1
         roughness /= 2
-    return map
+    return map, seed, corners
 
-def set_corners(map, rng, corners=None):
-    if corners is None:
-        corners = rng.random(4)   
+def set_corners(map, rng, corners):   
     last_index = map.shape[0] - 1
     map[0, 0] = corners[0]                     # top-left
     map[0, last_index] = corners[1]            # top-right

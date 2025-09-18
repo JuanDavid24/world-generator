@@ -3,7 +3,8 @@ import numpy as np
 def sentence_generator(axiom, ruleset, n, seed=None):
     if not check_lsys_ruleset(ruleset):
         raise Exception("La suma de las probabilidades de las reglas de cada simbolo debe ser 1")
-    
+    if seed is None:
+        seed = np.random.randint(0, 2**31)
     rng = np.random.default_rng(seed)
     for _ in range(n):
         sentence = ""
@@ -14,7 +15,7 @@ def sentence_generator(axiom, ruleset, n, seed=None):
             else: 
                 sentence += symbol
         axiom = sentence
-    return sentence            
+    return sentence, seed
 
 def apply_rule(ruleset, rng):
     rand_value = rng.random()
