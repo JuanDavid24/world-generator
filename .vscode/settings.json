@@ -3,5 +3,7 @@
     "python.testing.pytestArgs": [
         "src"
     ],
-    "python.testing.unittestEnabled": false
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+    }
 }
