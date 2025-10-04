@@ -23,8 +23,8 @@ def perlin_map(shape=(1024, 1024), scale=100, octaves=1, persistence=0.5, lacuna
         return normalize_map(map, -1, 1), seed
     return map, seed
 
-def diamond_square_map(n, roughness=1, seed=None, corners=None):
-    map, seed, corners = ds(n, roughness, seed, corners)
+def diamond_square_map(n, roughness=1, seed=None, corners=None, wrap=False):
+    map, seed, corners = ds(n, roughness, seed, corners, wrap)
     return map, seed, corners
 
 def normalize_map(map, min, max):

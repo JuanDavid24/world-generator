@@ -50,11 +50,11 @@ cs = [0.2, 0.2, 0.2, 0.2]
 ss = [123, 456, 789, 101112]
 
 # single map plot, random seed and corners
-timer.run()
-ds_map, seed, corners = (mg.diamond_square_map(n=10, roughness=1))
-timer.stop("Diamond-square map generado")
-corners_str = ",".join([str(c) for c in corners])
-mp.plot_map(ds_map, title=f"Map with seed {seed} and corners {corners_str}")
+# timer.run()
+# ds_map, seed, corners = (mg.diamond_square_map(n=10, roughness=1))
+# timer.stop("Diamond-square map generado")
+# corners_str = ",".join([str(c) for c in corners])
+# mp.plot_map(ds_map, title=f"Map with seed {seed} and corners {corners_str}")
 
 # variating n
 # ds_maps_n = [mg.diamond_square_map(n, seed=ss[0], corners=cs)[0] for n in ns]
@@ -75,3 +75,12 @@ mp.plot_map(ds_map, title=f"Map with seed {seed} and corners {corners_str}")
 # ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=123, corners=cs)[0])
 # ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=456, corners=cs)[0])
 # mp.plot_maps(ds_maps_cr, ('seed/corners', [(123, None), (123, None), (123, cs), (456, cs)]), title="Maps variating seed and corners")
+
+# wrap vs no-wrap
+ds_maps_wrap = []
+cs_2 = [0.2, 0.5, 0.7, 0.1]
+ds_maps_wrap.append(mg.diamond_square_map(n=6, roughness=1, seed=123, corners=cs, wrap=True)[0])
+ds_maps_wrap.append(mg.diamond_square_map(n=6, roughness=1, seed=123, corners=cs, wrap=False)[0])
+ds_maps_wrap.append(mg.diamond_square_map(n=6, roughness=1, seed=123, corners=cs_2, wrap=True)[0])
+ds_maps_wrap.append(mg.diamond_square_map(n=6, roughness=1, seed=123, corners=cs_2, wrap=False)[0])
+mp.plot_maps(ds_maps_wrap, ('wrap/corners', [(True, cs), (False, cs), (True, cs_2), (False, cs_2)]), title="Maps with wrap vs. no-wrap")

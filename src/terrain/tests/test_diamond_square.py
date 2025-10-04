@@ -75,10 +75,23 @@ neighbor_values_c = [
     [0.5, 0.2, 0.5],         # (4, 1)
     [0.2, 0.7, 0.5]          # (4, 3)
 ]
+neighbor_values_c_wrap = [
+    [0.5, 0.1, 0.5, 0.5],   # (0, 1)
+    [0.1, 0.5, 0.5, 0.9],   # (0, 3)
+    [0.5, 0.3, 0.5, 0.5],   # (1, 0)
+    [0.5, 0.2, 0.5, 0.1],   # (1, 2)
+    [0.9, 0.5, 0.5, 0.4],   # (1, 4)
+    [0.3, 0.2, 0.5, 0.5],   # (2, 1)
+    [0.2, 0.4, 0.5, 0.5],   # (2, 3)
+    [0.5, 0.5, 0.5, 0.3],   # (3, 0)
+    [0.5, 0.5, 0.2, 0.2],   # (3, 2)
+    [0.5, 0.5, 0.7, 0.4],   # (3, 4)
+    [0.5, 0.2, 0.5, 0.5],   # (4, 1)
+    [0.2, 0.7, 0.5, 0.5]    # (4, 3)
+]
 
 def test_set_corners():
-    rng = np.random.default_rng()
-    new_map = ds.set_corners(map_empty_5x5, rng, corners_a)
+    new_map = ds.set_corners(map_empty_5x5, corners_a)
     assert np.array_equal(new_map, input_map_a)
 
 @pytest.mark.parametrize("map, chunk_size, seed, output_map", [(input_map_a, chunk_size_a, seed_a, output_map_a), (input_map_b, chunk_size_b, seed_b, output_map_b)])
@@ -93,6 +106,12 @@ def test_get_square_neighbor_values(point, neighbor_values):
     result = ds.get_square_neighbor_values(input_map_c, x, y, chunk_size_c)
     assert sorted(result) == sorted(neighbor_values)
 
+@pytest.mark.parametrize("point, neighbor_values", list(zip(points_c, neighbor_values_c_wrap)))
+def test_get_square_neighbor_values_wrap(point, neighbor_values):
+    y, x = point
+    result = ds.get_square_neighbor_values(input_map_c, x, y, chunk_size_c, wrap=True)
+    assert sorted(result) == sorted(neighbor_values)
+    
 @pytest.mark.parametrize("map, chunk_size, seed, output_map", [(input_map_c, chunk_size_c, seed_c, output_map_c)])
 def test_square_step(map, chunk_size, seed, output_map):
     rng = np.random.default_rng(seed) 
@@ -101,7 +120,7 @@ def test_square_step(map, chunk_size, seed, output_map):
 
 @pytest.mark.parametrize("n, size, roughness, seed, corners", [(3, 9, 1, None, [0.2, 0.5, 0.1, 0.9]), (4, 17, 1, None, None), (5, 33, 1, None, None)])
 def test_diamond_square(n, size, roughness, seed, corners):
-    map = ds.diamond_square(n, roughness, seed, corners)
+    map, _, _ = ds.diamond_square(n, roughness, seed, corners)
     # check map size
     assert map.shape[0] == size
 
@@ -112,8 +131,8 @@ def test_diamond_square(n, size, roughness, seed, corners):
             
 def test_diamond_square_seed():
     # check map reproductibility given same seed
-    map1 = ds.diamond_square(n=4, roughness=1, seed=123)
-    map2 = ds.diamond_square(n=4, roughness=1, seed=123)
+    map1, _, _ = ds.diamond_square(n=4, roughness=1, seed=123)
+    map2, _, _ = ds.diamond_square(n=4, roughness=1, seed=123)
     assert np.array_equal(map1, map2)
     
     # check map variation given different seed
@@ -132,3 +151,9 @@ def test_diamond_square_seed():
     # n
     map3 = ds.diamond_square(n=3, roughness=1, seed=123)
     assert not np.array_equal(map1, map3)
+
+def test_diamond_square_seed_wrap():
+    # check map reproductibility given same seed
+    map1, _, _ = ds.diamond_square(n=4, roughness=1, seed=123, corners=[0.5, 0.5, 0.5, 0.5], wrap=True)
+    map2, _, _ = ds.diamond_square(n=4, roughness=1, seed=123, corners=[0.5, 0.5, 0.5, 0.5], wrap=True)
+    assert np.array_equal(map1, map2)
