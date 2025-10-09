@@ -13,7 +13,7 @@ def diamond_square(n, roughness=1, seed=None, corners=None, wrap=False):
 
     # Initialize the corners of the grid with the given seed values
     if corners is None:
-        corners = rng.random(4)
+        corners = np.random.uniform(size=4)
     map = set_corners(map, corners)
 
     chunk_size = size
@@ -55,7 +55,7 @@ def square_step(map, chunk_size, rng, roughness=1, wrap=False):
     size = map.shape[0]
     half = chunk_size // 2
     for y in range(0, size, half):
-        x0 = int(((y / half + 1) % 2) * half)
+        x0 = (y + half) % (chunk_size -1)
         for x in range(x0, size, chunk_size-1):
             map = calculate_square_value(map, x, y, chunk_size, rng, roughness, wrap)
     return map
