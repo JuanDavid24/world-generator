@@ -51,10 +51,10 @@ ss = [123, 456, 789, 101112]
 
 # single map plot, random seed and corners
 # timer.run()
-# ds_map, seed, corners = (mg.diamond_square_map(n=10, roughness=1))
+ds_map, seed, corners = (mg.diamond_square_map(n=5, roughness=1, debug=True))
 # timer.stop("Diamond-square map generado")
-# corners_str = ",".join([str(c) for c in corners])
-# mp.plot_map(ds_map, title=f"Map with seed {seed} and corners {corners_str}")
+corners_str = ",".join([str(c) for c in corners])
+mp.plot_map(ds_map, title=f"Map with seed {seed} and corners {corners_str}")
 
 # variating n
 # ds_maps_n = [mg.diamond_square_map(n, seed=ss[0], corners=cs)[0] for n in ns]
@@ -69,14 +69,14 @@ ss = [123, 456, 789, 101112]
 # mp.plot_maps(ds_maps_sd, ('seed', ss), title="Maps variating seed")
 
 # creating map with seed and fixed corners
-ds_maps_cr = []
-map1, seed1, corners1 = mg.diamond_square_map(n=5, roughness=1, seed=None, corners=None) # all random
-ds_maps_cr.append(map1)
-ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=seed1, corners=corners1)[0]) # same seed and corners
-ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=seed1, corners=None)[0]) # random corners
-ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=None, corners=corners1)[0]) # random seed
+# ds_maps_cr = []
+# map1, seed1, corners1 = mg.diamond_square_map(n=5, roughness=1, seed=None, corners=None) # all random
+# ds_maps_cr.append(map1)
+# ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=seed1, corners=corners1)[0]) # same seed and corners
+# ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=seed1, corners=None)[0]) # random corners
+# ds_maps_cr.append(mg.diamond_square_map(n=5, roughness=1, seed=None, corners=corners1)[0]) # random seed
 
-mp.plot_maps(ds_maps_cr, ('seed/corners', [(seed1, corners1), (seed1, corners1), (seed1, None), (None, corners1)]), title="Maps variating seed and corners")
+# mp.plot_maps(ds_maps_cr, ('seed/corners', [(seed1, corners1), (seed1, corners1), (seed1, None), (None, corners1)]), title="Maps variating seed and corners")
 
 # wrap vs no-wrap
 # ds_maps_wrap = []

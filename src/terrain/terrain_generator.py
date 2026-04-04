@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import noise
 from diamond_square import diamond_square as ds
@@ -23,8 +24,16 @@ def perlin_map(shape=(1024, 1024), scale=100, octaves=1, persistence=0.5, lacuna
         return normalize_map(map, -1, 1), seed
     return map, seed
 
-def diamond_square_map(n, roughness=1, seed=None, corners=None, wrap=False):
+def diamond_square_map(n, roughness=1, seed=None, corners=None, wrap=False, debug=False):
     map, seed, corners = ds(n, roughness, seed, corners, wrap)
+        
+    if debug:
+        np.set_printoptions(threshold=sys.maxsize)
+        with open('output.txt', 'w') as f:
+            print("Mapa generado con Diamond-Square" , file=f)    
+            print(f"size={2**n-1} - {n=} - {roughness=} - {seed=} - {wrap=}" , file=f)
+            print(f"Valores:\n {np.array2string(map, separator=',', max_line_width=sys.maxsize)}" , file=f)
+        
     return map, seed, corners
 
 def normalize_map(map, min, max):
