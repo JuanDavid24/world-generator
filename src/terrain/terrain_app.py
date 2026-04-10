@@ -11,7 +11,7 @@ timer = Timer()
     
 # single map plot, random seed, normalized vs not
 # timer.run()
-# pn_map, seed = mg.perlin_map(scale=400, octaves=7, normalized=False)
+# pn_map, seed = mg.perlin_map(shape=(256, 256), scale=100, octaves=7, normalized=False, debug=True)
 # timer.stop("Perlin map sin normalizar generado")
 # mp.plot_map(pn_map, min=-1, max=1, title=f"Perlin Map without normalization, seed={seed}")
 
@@ -51,7 +51,7 @@ ss = [123, 456, 789, 101112]
 
 # single map plot, random seed and corners
 # timer.run()
-ds_map, seed, corners = (mg.diamond_square_map(n=5, roughness=1, debug=True))
+ds_map, seed, corners = (mg.diamond_square_map(n=8, roughness=1, debug=True))
 # timer.stop("Diamond-square map generado")
 corners_str = ",".join([str(c) for c in corners])
 mp.plot_map(ds_map, title=f"Map with seed {seed} and corners {corners_str}")
