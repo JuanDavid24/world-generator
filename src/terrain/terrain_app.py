@@ -46,7 +46,7 @@ timer = Timer()
 # ----- diamond-square -----
 ns = [3, 5, 7, 10]
 rs = [2, 1, 0.5, 0.125] 
-cs = [0.2, 0.2, 0.2, 0.2]
+cs = [-0.2, 0.2, -0.2, 0.2]
 ss = [123, 456, 789, 101112]
 
 # single map plot, random seed and corners

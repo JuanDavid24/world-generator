@@ -11,9 +11,13 @@ def diamond_square(n, roughness=1, seed=None, corners=None, wrap=False):
     # Initialize random number generator with seed
     rng = np.random.default_rng(seed)
 
-    # Initialize the corners of the grid with the given seed values
+    # Initialize the corners of the grid 
     if corners is None:
         corners = np.random.uniform(size=4)
+    else:
+        # ensure corners is a numpy float array
+        corners = np.asarray(corners, dtype=float)
+        
     map = set_corners(map, corners)
 
     chunk_size = size
@@ -34,10 +38,13 @@ def set_corners(map, corners):
     return map
 
 def diamond_step(map, chunk_size, rng, roughness=1): 
-    '''x, y: top-left corner of first chunk'''
+    NEIGHBOR_COUNT = 4
+    MAX_AMPLITUDE = 1.0
+    MAX_RANDOM_DISPLACEMENT = 1.0
     map_size = map.shape[0]
     half = chunk_size // 2
 
+    '''x, y: top-left corner of first chunk'''
     for x in range(0, map_size-1, chunk_size-1):
         for y in range(0, map_size-1, chunk_size-1):
             # calculate the diamond midpoint value
@@ -46,9 +53,9 @@ def diamond_step(map, chunk_size, rng, roughness=1):
                 map[y + chunk_size - 1, x] + 
                 map[y, x + chunk_size - 1] + 
                 map[y + chunk_size - 1, x + chunk_size - 1]
-                ) / 4
-            value = rng.uniform(-0.5, 0.5) * roughness # random value scaled by roughness
-            map[y + half, x + half] = np.clip(avg + value, 0, 1)
+                ) / NEIGHBOR_COUNT
+            value = rng.uniform(-MAX_RANDOM_DISPLACEMENT, MAX_RANDOM_DISPLACEMENT) * roughness # random value scaled by roughness
+            map[y + half, x + half] = np.clip(avg + value, -MAX_AMPLITUDE, MAX_AMPLITUDE)
     return map
 
 def square_step(map, chunk_size, rng, roughness=1, wrap=False):
@@ -61,10 +68,13 @@ def square_step(map, chunk_size, rng, roughness=1, wrap=False):
     return map
 
 def calculate_square_value(map, x, y, chunk_size, rng, roughness=1, wrap=False):
+    MAX_AMPLITUDE = 1.0
+    MAX_RANDOM_DISPLACEMENT = 1.0
+    
     neighbor_values = get_square_neighbor_values(map, x, y, chunk_size, wrap)
     avg = sum(neighbor_values) / len(neighbor_values)
-    value = rng.uniform(-0.5, 0.5) * roughness # random value scaled by roughness
-    map[y, x] = np.clip(avg + value, 0, 1)
+    value = rng.uniform(-MAX_RANDOM_DISPLACEMENT, MAX_RANDOM_DISPLACEMENT) * roughness # random value scaled by roughness
+    map[y, x] = np.clip(avg + value, -MAX_AMPLITUDE, MAX_AMPLITUDE)
     return map
 
 def get_square_neighbor_values(map, x, y, chunk_size, wrap=False):
