@@ -31,7 +31,7 @@ def diamond_square_map(n, roughness=1, seed=None, corners=None, wrap=False, debu
     map, seed, corners = ds(n, roughness, seed, corners, wrap)
         
     if debug:
-        log_terrain_to_json('diamond_square', 2**n+1, seed, map, n=n, roughness=roughness, initial_corners=corners.tolist(), wrap=wrap)
+        log_terrain_to_json('diamond_square', 2**n+1, seed, map, n=n, roughness=roughness, initial_corners=corners, wrap=wrap)
     
     return map, seed, corners
 
