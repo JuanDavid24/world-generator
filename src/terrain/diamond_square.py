@@ -1,5 +1,8 @@
 import numpy as np
 
+MAX_AMPLITUDE = 1.0
+MAX_RANDOM_DISPLACEMENT = 1.0
+    
 def diamond_square(n, roughness=1, seed=None, corners=None, wrap=False):
     size = 2**n + 1
     map = np.zeros((size, size))
@@ -13,7 +16,7 @@ def diamond_square(n, roughness=1, seed=None, corners=None, wrap=False):
 
     # Initialize the corners of the grid 
     if corners is None:
-        corners = np.random.uniform(size=4)
+        corners = np.random.uniform(-MAX_AMPLITUDE, MAX_AMPLITUDE, size=4)
     else:
         # ensure corners is a numpy float array
         corners = np.asarray(corners, dtype=float)
@@ -39,8 +42,6 @@ def set_corners(map, corners):
 
 def diamond_step(map, chunk_size, rng, roughness=1): 
     NEIGHBOR_COUNT = 4
-    MAX_AMPLITUDE = 1.0
-    MAX_RANDOM_DISPLACEMENT = 1.0
     map_size = map.shape[0]
     half = chunk_size // 2
 
@@ -68,9 +69,6 @@ def square_step(map, chunk_size, rng, roughness=1, wrap=False):
     return map
 
 def calculate_square_value(map, x, y, chunk_size, rng, roughness=1, wrap=False):
-    MAX_AMPLITUDE = 1.0
-    MAX_RANDOM_DISPLACEMENT = 1.0
-    
     neighbor_values = get_square_neighbor_values(map, x, y, chunk_size, wrap)
     avg = sum(neighbor_values) / len(neighbor_values)
     value = rng.uniform(-MAX_RANDOM_DISPLACEMENT, MAX_RANDOM_DISPLACEMENT) * roughness # random value scaled by roughness
