@@ -3,6 +3,7 @@ from pathlib import Path
 import json
 from datetime import datetime
 import numpy as np
+import matplotlib.pyplot as plt
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 MOCK_DIR = BASE_DIR / "data" / "mock_responses"
@@ -36,3 +37,9 @@ def log_terrain_to_json(algorithm, size, seed, map, **algorithm_params):
     
     with open(MOCK_DIR / filename, 'w') as f:
         print(map_json, file=f)
+        
+def save_terrain_as_png(algorithm, map):
+    now = datetime.now()
+    time_str = now.strftime('%Y-%m-%d-%H%M%S')
+    filename = f'{algorithm}-{time_str}.png'
+    plt.imsave(MOCK_DIR / filename, map, cmap='gray', vmin=-1, vmax=1)

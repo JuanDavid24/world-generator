@@ -1,6 +1,6 @@
 import numpy as np
 import noise
-from utils.map_logger import log_terrain_to_json
+from utils.map_logger import log_terrain_to_json, save_terrain_as_png
 from diamond_square import diamond_square as ds
 
 def perlin_map(shape=(1024, 1024), scale=100, octaves=1, persistence=0.5, lacunarity=2, seed=None, normalized=False, debug=False):
@@ -21,10 +21,11 @@ def perlin_map(shape=(1024, 1024), scale=100, octaves=1, persistence=0.5, lacuna
                                         lacunarity=lacunarity, 
                                         base=0)
     if normalized:
-        return normalize_map(map, -1, 1), seed
+        map = normalize_map(map, -1, 1)
     if debug:
         log_terrain_to_json('perlin_noise', shape[0], seed, map, scale=scale, octaves=octaves, persistence=persistence, lacunarity=lacunarity)
-
+        save_terrain_as_png('perlin_noise', map)
+        
     return map, seed
 
 def diamond_square_map(n, roughness=1, seed=None, corners=None, wrap=False, debug=False):
@@ -32,6 +33,7 @@ def diamond_square_map(n, roughness=1, seed=None, corners=None, wrap=False, debu
         
     if debug:
         log_terrain_to_json('diamond_square', 2**n+1, seed, map, n=n, roughness=roughness, initial_corners=corners, wrap=wrap)
+        save_terrain_as_png('diamond_square', map)
     
     return map, seed, corners
 
