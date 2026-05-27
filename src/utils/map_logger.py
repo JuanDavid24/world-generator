@@ -43,3 +43,38 @@ def save_terrain_as_png(algorithm, map):
     time_str = now.strftime('%Y-%m-%d-%H%M%S')
     filename = f'{algorithm}-{time_str}.png'
     plt.imsave(MOCK_DIR / filename, map, cmap='gray', vmin=-1, vmax=1)
+    
+def log_plant_to_json(lsys, iterations, seed, output_sentence):
+    now = datetime.now()
+    time_str = now.strftime('%Y-%m-%d-%H%M%S')
+    
+    mapped_ruleset = map_lsystem_ruleset(lsys["ruleset"])
+    mapped_lsys = {
+        "ruleset": mapped_ruleset,
+        "axiom": lsys["axiom"]
+    }
+    plant_data = {
+        "date": time_str,
+        "l_system": mapped_lsys,
+        "iterations": iterations,
+        "seed": seed, 
+        "size": len(output_sentence),
+        "sentence": output_sentence
+    }
+    
+    plant_json = json.dumps(plant_data)
+    filename = f'lsystem-{time_str}.json'
+    with open(MOCK_DIR / filename, 'w') as f:
+        print(plant_json, file=f)
+
+def map_lsystem_ruleset(lsys_ruleset):
+    mapped_ruleset = {}
+    for symbol, symbol_ruleset in lsys_ruleset.items():
+        mapped_ruleset[symbol] = [] # define ruleset array for each symbol
+        for rule in symbol_ruleset:
+            mapped_rule = {
+                "sucessor": rule[0],
+                "probability": rule[1]
+            }
+            mapped_ruleset[symbol].append(mapped_rule)
+    return mapped_ruleset

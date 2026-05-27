@@ -3,12 +3,14 @@ import plant_plotter as plt
 import data.lsys_examples as data
 import data.colors as color
 from utils.timer import Timer
+from utils.map_logger import log_plant_to_json
 
 def run_lsystem(lsys, iterations, debug=False, seed=None, **plot_kwargs):
     timer = Timer(debug)
     timer.run()
     sentence, seed = lsystem.sentence_generator(lsys["axiom"], lsys["ruleset"], iterations, seed)
     timer.stop()
+    log_plant_to_json(lsys, iterations, seed, sentence)
     timer.run()
     plt.plant_plotter(sentence, **plot_kwargs)
     timer.stop()
@@ -25,9 +27,9 @@ def run_lsystem(lsys, iterations, debug=False, seed=None, **plot_kwargs):
 # run_lsystem(data.lsys_e, 7, step=3, angle=25.7, branch_color=color.corn, animation=False)
 # run_lsystem(data.lsys_e2, 7, step=3, angle=20, leaf_length=0.4, leaf_width=0.9, leaf_color=color.lightgray, branch_color=color.corn, animation=False)
 # run_lsystem(data.lsys_f, 7, step=3, angle=25.7, branch_color=color.darkcyan, animation=False)
-run_lsystem(data.lsys_f2, 6, debug=True, step=2.5, angle=20, leaf_length=0.6, leaf_width=0.2, leaf_color=color.fucsia, branch_color=color.darkcyan, animation=False)
+# run_lsystem(data.lsys_f2, 6, debug=True, step=2.5, angle=20, leaf_length=0.6, leaf_width=0.2, leaf_color=color.fucsia, branch_color=color.darkcyan, animation=False)
 # run_lsystem(data.lsys_g, 5, step=6, decay=0.9, angle=35, branch_color=color.darkcyan, animation=False)
 
 # # stochastic systems
-# run_lsystem(data.lsys_sto_a1, 4, step=30, angle=40, leaf_length=2, animation=False)
+run_lsystem(data.lsys_sto_a1, 4, step=30, angle=40, leaf_length=2, animation=False, debug=True)
 # run_lsystem(data.lsys_sto_a2, 4, step=25, angle=40, leaf_length=2, animation=False)
