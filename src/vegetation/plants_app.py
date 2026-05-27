@@ -23,7 +23,7 @@ def run_lsystem(lsys, iterations, debug=False, seed=None, **plot_kwargs):
 # run_lsystem(data.lsys_c, 4, step=15, angle=22.5, leaf_length=1, leaf_width=0.8, leaf_color=color.corn, animation=False)
 # run_lsystem(data.lsys_c2, 4, step=15, angle=22.5, leaf_length=2, leaf_width=0.6, leaf_color=color.corn, branch_color=color.olive, animation=False)
 # run_lsystem(data.lsys_d, 7, step=3, angle=20, branch_color=color.olive, animation=False)
-# run_lsystem(data.lsys_d2, 7, step=3, angle=20, leaf_length=0.4, leaf_width=0.2, leaf_color=color.darkcyan, branch_color=color.olive, animation=False)
+run_lsystem(data.lsys_d2, 7, step=3, angle=20, leaf_length=0.4, leaf_width=0.2, leaf_color=color.darkcyan, branch_color=color.olive, animation=False, debug=True)
 # run_lsystem(data.lsys_e, 7, step=3, angle=25.7, branch_color=color.corn, animation=False)
 # run_lsystem(data.lsys_e2, 7, step=3, angle=20, leaf_length=0.4, leaf_width=0.9, leaf_color=color.lightgray, branch_color=color.corn, animation=False)
 # run_lsystem(data.lsys_f, 7, step=3, angle=25.7, branch_color=color.darkcyan, animation=False)

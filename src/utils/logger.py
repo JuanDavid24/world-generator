@@ -51,14 +51,15 @@ def log_plant_to_json(lsys, iterations, seed, output_sentence):
     time_str = now.strftime('%Y-%m-%d-%H%M%S')
     
     mapped_ruleset = map_lsystem_ruleset(lsys["ruleset"])
-    mapped_lsys = {
+    algorithm_data = {
+        "name": "l_system",
         "ruleset": mapped_ruleset,
-        "axiom": lsys["axiom"]
+        "axiom": lsys["axiom"],
+        "iterations": iterations
     }
     plant_data = {
         "date": time_str,
-        "l_system": mapped_lsys,
-        "iterations": iterations,
+        "algorithm": algorithm_data,
         "seed": seed, 
         "size": len(output_sentence),
         "sentence": output_sentence
