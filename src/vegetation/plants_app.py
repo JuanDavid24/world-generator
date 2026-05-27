@@ -3,7 +3,7 @@ import plant_plotter as plt
 import data.lsys_examples as data
 import data.colors as color
 from utils.timer import Timer
-from utils.map_logger import log_plant_to_json
+from utils.logger import log_plant_to_json
 
 def run_lsystem(lsys, iterations, debug=False, seed=None, **plot_kwargs):
     timer = Timer(debug)

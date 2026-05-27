@@ -6,8 +6,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-MOCK_DIR = BASE_DIR / "data" / "mock_responses"
-MOCK_DIR.mkdir(parents=True, exist_ok=True)
+TERRAIN_MOCK_DIR = BASE_DIR / "data" / "mock_responses" / "terrain"
+VEGETATION_MOCK_DIR = BASE_DIR / "data" / "mock_responses" / "vegetation"
+TERRAIN_MOCK_DIR.mkdir(parents=True, exist_ok=True)
+VEGETATION_MOCK_DIR.mkdir(parents=True, exist_ok=True)
 
 def log_terrain_to_json(algorithm, size, seed, map, **algorithm_params):
     now = datetime.now()
@@ -35,14 +37,14 @@ def log_terrain_to_json(algorithm, size, seed, map, **algorithm_params):
     map_json = json.dumps(map_data)
     filename = f'{algorithm}-{time_str}.json'
     
-    with open(MOCK_DIR / filename, 'w') as f:
+    with open(TERRAIN_MOCK_DIR / filename, 'w') as f:
         print(map_json, file=f)
         
 def save_terrain_as_png(algorithm, map):
     now = datetime.now()
     time_str = now.strftime('%Y-%m-%d-%H%M%S')
     filename = f'{algorithm}-{time_str}.png'
-    plt.imsave(MOCK_DIR / filename, map, cmap='gray', vmin=-1, vmax=1)
+    plt.imsave(TERRAIN_MOCK_DIR / filename, map, cmap='gray', vmin=-1, vmax=1)
     
 def log_plant_to_json(lsys, iterations, seed, output_sentence):
     now = datetime.now()
@@ -64,7 +66,7 @@ def log_plant_to_json(lsys, iterations, seed, output_sentence):
     
     plant_json = json.dumps(plant_data)
     filename = f'lsystem-{time_str}.json'
-    with open(MOCK_DIR / filename, 'w') as f:
+    with open(VEGETATION_MOCK_DIR / filename, 'w') as f:
         print(plant_json, file=f)
 
 def map_lsystem_ruleset(lsys_ruleset):
