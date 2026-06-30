@@ -1,7 +1,7 @@
 import numpy as np
 import noise
 from utils.logger import log_terrain_to_json, save_terrain_as_png
-from diamond_square import diamond_square as ds
+from terrain.diamond_square import diamond_square as ds
 
 def perlin_map(shape=(1024, 1024), scale=100, octaves=1, persistence=0.5, lacunarity=2, seed=None, normalized=False, debug=False):
     if seed is None:
