@@ -12,11 +12,20 @@ TERRAIN_MOCK_DIR.mkdir(parents=True, exist_ok=True)
 VEGETATION_MOCK_DIR.mkdir(parents=True, exist_ok=True)
 
 def log_terrain_to_json(algorithm, size, seed, map, **algorithm_params):
+    terrain_data = format_terrain_data(algorithm, size, seed, map, **algorithm_params)
+    
+    terrain_json = json.dumps(terrain_data)
+    filename = f'{algorithm}-{terrain_data["date"]}.json'
+    
+    with open(TERRAIN_MOCK_DIR / filename, 'w') as f:
+        print(terrain_json, file=f)
+        
+def format_terrain_data(algorithm, size, seed, map, **algorithm_params):
     now = datetime.now()
     time_str = now.strftime('%Y-%m-%d-%H%M%S')
     
     np.set_printoptions(threshold=sys.maxsize) # print all matrix
-    map_data = {
+    terrain_data = {
         'date': time_str,
         'algorithm': {
             'name': algorithm,
@@ -24,22 +33,18 @@ def log_terrain_to_json(algorithm, size, seed, map, **algorithm_params):
         },
         "seed": seed, 
         "size": size,
-        "min": map.min(),
-        "max": map.max(),
+        "min": float(map.min()),
+        "max": float(map.max()),
         "map": map.tolist()
     }
     
     if algorithm == "diamond_square":
         algorithm_params["initial_corners"] = algorithm_params["initial_corners"].tolist()
-        
-    map_data['algorithm']['params'] = algorithm_params
     
-    map_json = json.dumps(map_data)
-    filename = f'{algorithm}-{time_str}.json'
+    terrain_data['algorithm']['params'] = algorithm_params
     
-    with open(TERRAIN_MOCK_DIR / filename, 'w') as f:
-        print(map_json, file=f)
-        
+    return terrain_data
+    
 def save_terrain_as_png(algorithm, map):
     now = datetime.now()
     time_str = now.strftime('%Y-%m-%d-%H%M%S')
