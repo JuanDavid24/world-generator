@@ -28,14 +28,14 @@ def perlin_map(shape=(1024, 1024), scale=100, octaves=1, persistence=0.5, lacuna
         
     return map, seed
 
-def diamond_square_map(n, roughness=1, seed=None, corners=None, wrap=False, debug=False):
-    map, seed, corners = ds(n, roughness, seed, corners, wrap)
+def diamond_square_map(n, roughness=1, seed=None, initial_corners=None, wrap=False, debug=False):
+    map, seed, initial_corners = ds(n, roughness, seed, initial_corners, wrap)
         
     if debug:
-        log_terrain_to_json('diamond_square', 2**n+1, seed, map, n=n, roughness=roughness, initial_corners=corners, wrap=wrap)
+        log_terrain_to_json('diamond_square', 2**n+1, seed, map, n=n, roughness=roughness, initial_corners=initial_corners, wrap=wrap)
         save_terrain_as_png('diamond_square', map)
     
-    return map, seed, corners
+    return map, seed, initial_corners
 
 def normalize_map(map, min, max):
     """ Normalizes a map to a given range [min, max]"""

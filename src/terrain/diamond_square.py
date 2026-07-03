@@ -3,7 +3,7 @@ import numpy as np
 MAX_AMPLITUDE = 1.0
 MAX_RANDOM_DISPLACEMENT = 1.0
     
-def diamond_square(n, roughness=1, seed=None, corners=None, wrap=False):
+def diamond_square(n, roughness=1, seed=None, initial_corners=None, wrap=False):
     size = 2**n + 1
     map = np.zeros((size, size))
     
@@ -15,13 +15,13 @@ def diamond_square(n, roughness=1, seed=None, corners=None, wrap=False):
     rng = np.random.default_rng(seed)
 
     # Initialize the corners of the grid 
-    if corners is None:
-        corners = np.random.uniform(-MAX_AMPLITUDE, MAX_AMPLITUDE, size=4)
+    if initial_corners is None:
+        initial_corners = np.random.uniform(-MAX_AMPLITUDE, MAX_AMPLITUDE, size=4)
     else:
         # ensure corners is a numpy float array
-        corners = np.asarray(corners, dtype=float)
+        initial_corners = np.asarray(initial_corners, dtype=float)
         
-    map = set_corners(map, corners)
+    map = set_corners(map, initial_corners)
 
     chunk_size = size
     while n > 0:
@@ -30,7 +30,7 @@ def diamond_square(n, roughness=1, seed=None, corners=None, wrap=False):
         n -= 1
         chunk_size = 2**n + 1
         roughness /= 2
-    return map, seed, corners
+    return map, seed, initial_corners
 
 def set_corners(map, corners):   
     last_index = map.shape[0] - 1

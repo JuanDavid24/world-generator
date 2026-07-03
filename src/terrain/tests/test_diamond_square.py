@@ -138,42 +138,42 @@ def test_square_step_seed(map, chunk_size, seed):
     new_map2 = ds.square_step(map, chunk_size, rng)
     assert np.array_equal(new_map1, new_map2)
 
-@pytest.mark.parametrize("n, size, roughness, seed, corners", [(3, 9, 1, None, [0.2, 0.5, 0.1, 0.9]), (4, 17, 1, None, None), (5, 33, 1, None, None)])
-def test_diamond_square(n, size, roughness, seed, corners):
-    map, _, _ = ds.diamond_square(n, roughness, seed, corners)
+@pytest.mark.parametrize("n, size, roughness, seed, initial_corners", [(3, 9, 1, None, [0.2, 0.5, 0.1, 0.9]), (4, 17, 1, None, None), (5, 33, 1, None, None)])
+def test_diamond_square(n, size, roughness, seed, initial_corners):
+    map, _, _ = ds.diamond_square(n, roughness, seed, initial_corners)
     # check map size
     assert map.shape[0] == size
 
     # check corners if given
-    if corners is not None:
-        corners = [map[0, 0], map[0, size-1], map[size-1, 0], map[size-1, size-1]]
-        assert corners == corners
+    if initial_corners is not None:
+        initial_corners = [map[0, 0], map[0, size-1], map[size-1, 0], map[size-1, size-1]]
+        assert initial_corners == initial_corners
             
 def test_diamond_square_seed():
     # check map reproductibility given same seed
-    map1, _, _ = ds.diamond_square(n=4, roughness=1, seed=123, corners=[0.5, 0.5, -0.5, -0.5])
-    map2, _, _ = ds.diamond_square(n=4, roughness=1, seed=123, corners=[0.5, 0.5, -0.5, -0.5])
+    map1, _, _ = ds.diamond_square(n=4, roughness=1, seed=123, initial_corners=[0.5, 0.5, -0.5, -0.5])
+    map2, _, _ = ds.diamond_square(n=4, roughness=1, seed=123, initial_corners=[0.5, 0.5, -0.5, -0.5])
     assert np.array_equal(map1, map2)
     
     # check map variation given different seed
-    map3 = ds.diamond_square(n=4, roughness=1, seed=456, corners=[0.5, 0.5, -0.5, -0.5])
+    map3 = ds.diamond_square(n=4, roughness=1, seed=456, initial_corners=[0.5, 0.5, -0.5, -0.5])
     assert not np.array_equal(map1, map3)
     
     # check map variation given same seed but changing other parameters
     # corners
-    map3 = ds.diamond_square(n=4, roughness=1, seed=123, corners=[-0.2, 0.3, 0.2, 0.9])
+    map3 = ds.diamond_square(n=4, roughness=1, seed=123, initial_corners=[-0.2, 0.3, 0.2, 0.9])
     assert not np.array_equal(map1, map3)
     
     # roughness
-    map3 = ds.diamond_square(n=4, roughness=0.5, seed=123, corners=[0.5, 0.5, -0.5, -0.5])
+    map3 = ds.diamond_square(n=4, roughness=0.5, seed=123, initial_corners=[0.5, 0.5, -0.5, -0.5])
     assert not np.array_equal(map1, map3)
     
     # n
-    map3 = ds.diamond_square(n=3, roughness=1, seed=123, corners=[0.5, 0.5, -0.5, -0.5])
+    map3 = ds.diamond_square(n=3, roughness=1, seed=123, initial_corners=[0.5, 0.5, -0.5, -0.5])
     assert not np.array_equal(map1, map3)
 
 def test_diamond_square_seed_wrap():
     # check map reproductibility given same seed
-    map1, _, _ = ds.diamond_square(n=4, roughness=1, seed=123, corners=[0.5, 0.5, 0.5, 0.5], wrap=True)
-    map2, _, _ = ds.diamond_square(n=4, roughness=1, seed=123, corners=[0.5, 0.5, 0.5, 0.5], wrap=True)
+    map1, _, _ = ds.diamond_square(n=4, roughness=1, seed=123, initial_corners=[0.5, 0.5, 0.5, 0.5], wrap=True)
+    map2, _, _ = ds.diamond_square(n=4, roughness=1, seed=123, initial_corners=[0.5, 0.5, 0.5, 0.5], wrap=True)
     assert np.array_equal(map1, map2)
