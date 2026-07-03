@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from terrain.terrain_generator import perlin_map
+from utils.logger import format_terrain_data
 
 class Perlin_params(BaseModel): 
   seed: int | None = None
@@ -18,10 +19,13 @@ def read_root():
 
 @app.post("/terrain/perlin")
 async def create_terrain_perlin(args: Perlin_params):
-  args_dict = args.model_dump()
-  args_dict["shape"] = (args.size, args.size)
-  args_dict.pop("size")
+  terrain_args = args.model_dump()  # JSON to dict
+  terrain_args["shape"] = (args.size, args.size)
+  terrain_args.pop("size")  # not needed for perlin_map function
   
-  map, seed = perlin_map(**args_dict, debug=True)
-  args_dict["seed"] = seed
-  return {"Perlin params": args}
+  map, seed = perlin_map(**terrain_args, debug=True)
+  terrain_args.update({"seed": seed}) # update seed if not given in req
+  
+  res_data = format_terrain_data(algorithm="perlin_noise", map=map, size=args.size, **terrain_args)
+
+  return res_data
