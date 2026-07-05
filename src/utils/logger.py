@@ -11,7 +11,7 @@ VEGETATION_MOCK_DIR = BASE_DIR / "data" / "mock_responses" / "vegetation"
 TERRAIN_MOCK_DIR.mkdir(parents=True, exist_ok=True)
 VEGETATION_MOCK_DIR.mkdir(parents=True, exist_ok=True)
 
-def log_terrain_to_json(algorithm, size, seed, map, **algorithm_params):
+def log_terrain_to_json_file(algorithm, size, seed, map, **algorithm_params):
     terrain_data = format_terrain_data(algorithm, size, seed, map, **algorithm_params)
     
     terrain_json = json.dumps(terrain_data)
