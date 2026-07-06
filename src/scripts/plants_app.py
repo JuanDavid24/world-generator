@@ -1,14 +1,14 @@
-import l_systems as lsystem
-import plant_plotter as plt
-import data.lsys_examples as data
-import data.colors as color
-from utils.timer import Timer
-from utils.logger import log_plant_to_json
+from src.engine.vegetation.l_systems import sentence_generator
+import src.engine.vegetation.plant_plotter as plt
+import src.engine.vegetation.data.lsys_examples as data
+import src.engine.vegetation.data.colors as color
+from src.engine.utils.timer import Timer
+from src.utils.logger import log_plant_to_json
 
 def run_lsystem(lsys, iterations, debug=False, seed=None, **plot_kwargs):
     timer = Timer(debug)
     timer.run()
-    sentence, seed = lsystem.sentence_generator(lsys["axiom"], lsys["ruleset"], iterations, seed)
+    sentence, seed = sentence_generator(lsys["axiom"], lsys["ruleset"], iterations, seed)
     timer.stop()
     log_plant_to_json(lsys, iterations, seed, sentence)
     timer.run()

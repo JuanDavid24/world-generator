@@ -1,7 +1,7 @@
-from diamond_square import diamond_square as ds
-from perlin_noise import generate_perlin_map
-import terrain_plotter as tp
-from utils.timer import Timer
+from engine.terrain.diamond_square import diamond_square as ds
+from engine.terrain.perlin_noise import generate_perlin_map
+import engine.terrain.terrain_plotter as tp
+from engine.utils.timer import Timer
 # ----- perlin noise -----
 scales = [100, 200, 400, 800]
 octaves = [1, 2, 3, 4]
