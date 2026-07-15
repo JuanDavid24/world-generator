@@ -51,6 +51,36 @@ def save_terrain_as_png(algorithm, map):
     filename = f'{algorithm}-{time_str}.png'
     plt.imsave(TERRAIN_MOCK_DIR / filename, map, cmap='gray', vmin=-1, vmax=1)
     
+def log_plant_to_json_file(lsys, iterations, seed, output_sentence):
+    plant_data = format_plant_data(lsys, iterations, seed, output_sentence)
+    
+    plant_json = json.dumps(plant_data)
+    filename = f'{plant_data["date"]}.json'
+    
+    with open(VEGETATION_MOCK_DIR / filename, 'w') as f:
+        print(plant_json, file=f)
+        
+def format_plant_data(lsys, iterations, seed, output_sentence):
+    now = datetime.now()
+    time_str = now.strftime('%Y-%m-%d-%H%M%S')
+    
+    mapped_ruleset = map_lsystem_ruleset(lsys["ruleset"])
+    algorithm_data = {
+        "name": "l_system",
+        "ruleset": mapped_ruleset,
+        "axiom": lsys["axiom"],
+        "iterations": iterations
+    }
+    plant_data = {
+        "date": time_str,
+        "algorithm": algorithm_data,
+        "seed": seed, 
+        "size": len(output_sentence),
+        "sentence": output_sentence
+    }
+    
+    return plant_data
+    
 def log_plant_to_json(lsys, iterations, seed, output_sentence):
     now = datetime.now()
     time_str = now.strftime('%Y-%m-%d-%H%M%S')
