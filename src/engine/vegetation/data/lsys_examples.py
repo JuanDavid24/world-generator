@@ -115,3 +115,35 @@ lsys_sto_a2 = {
     },
     "axiom": "FL"
 }
+
+symetrical_tree_3d = {
+    "ruleset": {
+        "F": [("F[^X]//////[^XL]//////[^XL]", 1)],        
+        "X": [("FF", 1)]
+    },
+    "axiom": "X",
+    "default_angle": 22.5
+}
+
+dense_bush_3d = {
+    "ruleset": {
+        "F": [("F[+FL][-FL][^FL][&FL]", 1)]
+    },
+    "axiom": "F",
+    "default_angle": 25
+}
+
+fine_herb_3d = {
+    "ruleset": {
+        "F": [("FF", 1)],
+        "X": [("F[^XL]F[&XL]/XL", 1)]    
+    },
+    "axiom": "X",
+    "default_angle": 20
+}
+
+lsys_dataset = {
+    "symetrical_tree_3d": symetrical_tree_3d,
+    "dense_bush_3d": dense_bush_3d,
+    "fine_herb_3d": fine_herb_3d
+}
