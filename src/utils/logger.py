@@ -60,7 +60,7 @@ def log_plant_to_json_file(lsys, iterations, seed, output_sentence):
     with open(VEGETATION_MOCK_DIR / filename, 'w') as f:
         print(plant_json, file=f)
         
-def format_plant_data(lsys, iterations, seed, output_sentence):
+def format_plant_data(lsys, iterations, seed, output_sentence, id=None):
     now = datetime.now()
     time_str = now.strftime('%Y-%m-%d-%H%M%S')
     
@@ -73,8 +73,10 @@ def format_plant_data(lsys, iterations, seed, output_sentence):
     }
     plant_data = {
         "date": time_str,
+        "name": id,
         "algorithm": algorithm_data,
         "seed": seed, 
+        "default_angle": lsys["default_angle"],
         "size": len(output_sentence),
         "sentence": output_sentence
     }
