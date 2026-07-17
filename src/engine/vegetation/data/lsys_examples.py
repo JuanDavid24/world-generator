@@ -143,7 +143,7 @@ fine_herb_3d = {
 }
 
 lsys_dataset = {
-    "symetrical_tree_3d": symetrical_tree_3d,
-    "dense_bush_3d": dense_bush_3d,
-    "fine_herb_3d": fine_herb_3d
+    "symetrical_tree": symetrical_tree_3d,
+    "dense_bush": dense_bush_3d,
+    "fine_herb": fine_herb_3d
 }
