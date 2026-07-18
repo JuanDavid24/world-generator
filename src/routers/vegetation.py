@@ -9,7 +9,7 @@ router = APIRouter(
 
 @router.post("/{id}")
 async def vegetation_from_id_route(id: str, req_body: Vegetation_from_id_params):
-    veg_params = req_body.model_dump() # modele to dict
+    veg_params = req_body.model_dump() # model to dict
     res_data = process_plant_from_id(id, **veg_params)
     
     return res_data
