@@ -12,5 +12,5 @@ class Diamond_square_params(BaseModel):
   seed: int | None = None
   n: int
   initial_corners: list[float] | None = None
-  roughness: int | None = 1
+  roughness: float | None = 1.0
   wrap: bool | None = False

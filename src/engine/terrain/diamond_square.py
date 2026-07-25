@@ -3,7 +3,7 @@ import numpy as np
 MAX_AMPLITUDE = 1.0
 MAX_RANDOM_DISPLACEMENT = 1.0
     
-def diamond_square(n, roughness=1, seed=None, initial_corners=None, wrap=False):
+def diamond_square(n, roughness=1.0, seed=None, initial_corners=None, wrap=False):
     size = 2**n + 1
     map = np.zeros((size, size))
     
@@ -40,7 +40,7 @@ def set_corners(map, corners):
     map[last_index, last_index] = corners[3]   # bottom-right
     return map
 
-def diamond_step(map, chunk_size, rng, roughness=1): 
+def diamond_step(map, chunk_size, rng, roughness=1.0): 
     NEIGHBOR_COUNT = 4
     map_size = map.shape[0]
     half = chunk_size // 2
@@ -59,7 +59,7 @@ def diamond_step(map, chunk_size, rng, roughness=1):
             map[y + half, x + half] = np.clip(avg + value, -MAX_AMPLITUDE, MAX_AMPLITUDE)
     return map
 
-def square_step(map, chunk_size, rng, roughness=1, wrap=False):
+def square_step(map, chunk_size, rng, roughness=1.0, wrap=False):
     size = map.shape[0]
     half = chunk_size // 2
     for y in range(0, size, half):
@@ -68,7 +68,7 @@ def square_step(map, chunk_size, rng, roughness=1, wrap=False):
             map = calculate_square_value(map, x, y, chunk_size, rng, roughness, wrap)
     return map
 
-def calculate_square_value(map, x, y, chunk_size, rng, roughness=1, wrap=False):
+def calculate_square_value(map, x, y, chunk_size, rng, roughness=1.0, wrap=False):
     neighbor_values = get_square_neighbor_values(map, x, y, chunk_size, wrap)
     avg = sum(neighbor_values) / len(neighbor_values)
     value = rng.uniform(-MAX_RANDOM_DISPLACEMENT, MAX_RANDOM_DISPLACEMENT) * roughness # random value scaled by roughness
