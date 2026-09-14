@@ -3,7 +3,7 @@ import noise
 
 from engine.terrain.diamond_square import diamond_square as ds
 from engine.terrain.perlin_noise import generate_perlin_map as pn
-from engine.utils.normalize import normalize_map
+from engine.terrain.normalize import normalize_map
 from src.utils.logger import log_terrain_to_json_file, save_terrain_as_png, format_terrain_data
 
 def process_perlin_terrain(size=256, scale=100, octaves=1, persistence=0.5, lacunarity=2, seed=None, normalized=False, debug=False):

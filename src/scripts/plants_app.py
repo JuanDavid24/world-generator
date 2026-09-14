@@ -2,7 +2,7 @@ from src.engine.vegetation.l_systems import sentence_generator
 import src.engine.vegetation.plant_plotter as plt
 import src.engine.vegetation.data.lsys_examples as data
 import src.engine.vegetation.data.colors as color
-from src.engine.utils.timer import Timer
+from src.utils.timer import Timer
 from src.utils.logger import log_plant_to_json
 
 def run_lsystem(lsys, iterations, debug=False, seed=None, **plot_kwargs):
