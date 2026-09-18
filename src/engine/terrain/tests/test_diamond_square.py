@@ -1,6 +1,6 @@
 import numpy as np 
 import pytest
-from terrain import diamond_square as ds
+from engine.terrain import diamond_square as ds
 
 # data
 map_empty_5x5 = np.zeros((5, 5))
