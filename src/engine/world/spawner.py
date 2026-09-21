@@ -15,7 +15,7 @@ class Vegetation_params:
     
     def __post_init__(self):
         if self.max_jitter is None:
-            self.max_jitter = self.distance // 4
+            self.max_jitter = 1.0
         if self.variance is None:
                     self.variance = 0.15
     
@@ -29,6 +29,8 @@ class Spawner:
         self.spawn_threshold = 1 - self.vegetation.cover
         self.create_noise_map()
         # self.create_jitter()
+        self.base_x, self.base_y = self.create_base_axes()
+        self.positions_x, self.positions_y = self.create_jittered_positions()
         self.sample_terrain_heights()
         
         
@@ -40,9 +42,9 @@ class Spawner:
         noise_map, seed = generate_perlin_map(shape=(self.noise_map_size, self.noise_map_size), 
                                         scale=perlin_scale, 
                                         seed=self.seed)
-        self.noise_map = normalize_map(noise_map, 0, 1)
+        self.noise_map = normalize_map(noise_map)
         self.seed = seed
-        
+                
     def create_jitter_matrix(self):
         jitter = self.rng.uniform(-self.vegetation.max_jitter, self.vegetation.max_jitter, 
                                          size=(self.noise_map_size, self.noise_map_size))
@@ -51,15 +53,13 @@ class Spawner:
         return jitter
         
     def create_jittered_positions(self):        
-        base_x, base_y = self.create_base_axes()
-        
         # jitter matrices for plant displacement
         jitter_x = self.create_jitter_matrix()
         jitter_y = self.create_jitter_matrix()
         
         # jitter-displaced x and y spawn coordinates on the terrain
-        jittered_x = jitter_x + base_x
-        jittered_y = jitter_y + base_y
+        jittered_x = jitter_x + self.base_x
+        jittered_y = jitter_y + self.base_y
         
         # round and cast values to int
         jittered_x = np.round(jittered_x).astype(int)
@@ -83,33 +83,30 @@ class Spawner:
         return base_x, base_y
     
     def sample_terrain_heights(self):
-        self.positions_x, self.positions_y = self.create_jittered_positions()
         self.real_heightmap = self.terrain[self.positions_y, self.positions_x]
         
-    def create_spawn_map(self):
-        spawn_map = np.where(self.fitness_map > self.spawn_threshold, True, False)
+    def create_valid_height_mask(self):
+        return (self.real_heightmap >= self.vegetation.min_height) & (self.real_heightmap <= self.vegetation.max_height)
+    
+    def create_random_variance(self):
+        return self.rng.uniform(-self.vegetation.variance, self.vegetation.variance, size=self.noise_map.shape)
         
     def create_fitness_map(self):
-        variance = self.vegetation.variance
-        min_height = self.vegetation.min_height
-        max_height = self.vegetation.max_height
-        real_heightmap = self.real_heightmap
-        
         INVALID_HEIGHT_PENALTY = -1.0 # for positions with out-of-bounds height values
         
         # filter valid height values
-        valid_height_mask = (real_heightmap >= min_height) & (real_heightmap <= max_height)
+        valid_height_mask = self.create_valid_height_mask()
         
         # random variaton matrix
-        random_variance = self.rng.uniform(-variance, variance, size=self.noise_map_size)   
-        
-        # fitness for valid heights
-        base_fitness = self.noise_map + random_variance 
+        random_variance = self.create_random_variance()
         
         # fitness map generation
+        base_fitness = self.noise_map + random_variance 
         self.fitness_map = np.where(valid_height_mask, base_fitness, INVALID_HEIGHT_PENALTY)   
         
-        # out of height bounds penalty
+    def create_spawn_map(self):
+        self.spawn_map = np.where(self.fitness_map > self.spawn_threshold, True, False)
+        
     # def create_spawn_map(self):
     #     NOISE_MAP_THRESHOLD = 1 - self.vegetation.cover
         
