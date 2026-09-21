@@ -12,18 +12,12 @@ TERRAIN_DATA_DUMMY = [      # mock terrain of zeros
 ]
 
 TERRAIN_DATA = [
-    np.array([[-0.5, 0.1, 0.3, 0.1, 0.1],
-              [0.5, -0.1, 0.3, 0.9, 0.9],
-              [0.5, 0.1, -0.3, 0.1, 0.1],
-              [0.5, 0.1, -0.3, 0.1, 0.1],
-              [-0.9, 0.1, 0.3, -0.1, -0.1]]),
-    np.array([[-0.5, 0.1, 0.3, 0.1, 0.1, -0.2],
-              [0.5, -0.1, 0.3, 0.9, 0.9, 0.2],
-              [0.5, 0.1, -0.3, 0.1, 0.1, 0.7],
-              [0.5, 0.1, -0.3, 0.1, 0.1, 0.2],
-              [0.3, 0.2, -0.1, 0.4, 0.8, 0.2],
-              [-0.9, 0.1, 0.3, -0.1, -0.1, 0.1]])
+    np.random.rand(4,4),
+    np.random.rand(5,5),
+    np.random.rand(12, 12),
+    np.random.rand(31, 31)  
 ]
+
 DISTANCE_DATA = [3, 2]
 
 # --- fixtures ---
@@ -32,7 +26,7 @@ def multi_terrain_dummy(request):
     return request.param
 
 @pytest.fixture(params=TERRAIN_DATA)
-def multi_terrain(request):
+def multi_terrain_basic(request):
     return request.param
 
 @pytest.fixture(params=DISTANCE_DATA)
@@ -44,8 +38,12 @@ def dynamic_spawner_dummy(multi_terrain_dummy, multi_vegetation):
     return Spawner(terrain=multi_terrain_dummy, vegetation=multi_vegetation, seed=123)
 
 @pytest.fixture
-def dynamic_spawner(multi_terrain, multi_vegetation):
-    return Spawner(terrain=multi_terrain, vegetation=multi_vegetation, seed=123)
+def dynamic_spawner(multi_terrain_basic, multi_vegetation):
+    return Spawner(terrain=multi_terrain_basic, vegetation=multi_vegetation, seed=123)
+
+@pytest.fixture
+def dynamic_spawner_big(multi_terrain_big, multi_vegetation):
+    return Spawner(terrain=multi_terrain_big, vegetation=multi_vegetation, seed=123)
 
 # --- tests ---
 def test_noise_map_shape(dynamic_spawner_dummy):
@@ -94,8 +92,42 @@ def test_jittered_positions(dynamic_spawner_dummy):
     assert positions_x_in_bound
     assert positions_y_in_bound
     
+def test_valid_height_mask(dynamic_spawner):
+    height_mask = dynamic_spawner.create_valid_height_mask()
+    noise_map_shape = dynamic_spawner.noise_map.shape
+
+    # check height validation mask shape against noise map
+    assert height_mask.shape == noise_map_shape
+
+    min_h = dynamic_spawner.vegetation.min_height
+    max_h = dynamic_spawner.vegetation.max_height
+    real_heightmap = dynamic_spawner.real_heightmap
+    
+    # check content validates real heightmap values
+    for y in range(len(real_heightmap)):
+        for x in range(len(real_heightmap)):
+            if min_h <= real_heightmap[y, x] <= max_h:
+                assert height_mask[y, x]
+            else: 
+                assert not height_mask[y, x]
+    
+def test_sample_spawn_points(dynamic_spawner):
+    positions_x = dynamic_spawner.positions_x
+    positions_y = dynamic_spawner.positions_y
+    sampled_heightmap = dynamic_spawner.real_heightmap
+    terrain = dynamic_spawner.terrain
+    
+    expected = terrain[positions_y, positions_x]
+    # for cell_row in range(positions_x.shape[0] -1):
+    #     for cell_col in range(positions_x.shape[1] -1): 
+    #         x = positions_x[cell_col, cell_row]
+    #         y = positions_y[cell_col, cell_row]
+    #         assert np.allclose(sampled_heightmap[y, x], terrain[y, x])
+    assert np.allclose(sampled_heightmap, expected)
+    
 def test_fitness_map(dynamic_spawner):
     # generate fitness
+    # dynamic_spawner.vegetation.max_jitter = 2.0
     dynamic_spawner.create_fitness_map()
     fitness_map = dynamic_spawner.fitness_map
     fitness_shape = fitness_map.shape
@@ -114,7 +146,7 @@ def test_fitness_map(dynamic_spawner):
     
     for y in range(noise_map_shape[0]):
         for x in range(noise_map_shape[1]):
-            if min_h <= real_heightmap[y, x] < max_h:
+            if min_h <= real_heightmap[y, x] <= max_h:
                 assert(is_valid_fitness(fitness_map[y, x], 
                                         noise_map[y, x],
                                         var))
