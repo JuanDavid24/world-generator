@@ -10,14 +10,14 @@ class Vegetation_params:
     cover: float = 0.5
     max_jitter: float | None = None
     variance: float | None = None
-    min_height: float = 0.2
+    min_height: float = -0.25
     max_height: float = 0.8
     
     def __post_init__(self):
         if self.max_jitter is None:
             self.max_jitter = 1.0
         if self.variance is None:
-                    self.variance = 0.15
+            self.variance = 0.15
     
 class Spawner:
     def __init__(self, terrain, vegetation: Vegetation_params, seed=None):
@@ -27,12 +27,15 @@ class Spawner:
         self.seed = seed
         self.rng = np.random.default_rng(seed) # Initialize random number generator with seed
         self.spawn_threshold = 1 - self.vegetation.cover
-        self.create_noise_map()
-        # self.create_jitter()
-        self.base_x, self.base_y = self.create_base_axes()
-        self.positions_x, self.positions_y = self.create_jittered_positions()
-        self.sample_terrain_heights()
         
+    def create_spawn_map(self):
+        self.create_noise_map()
+        self.create_base_axes()
+        self.create_jittered_positions()
+        self.sample_terrain_heights()
+        self.create_fitness_map()
+        
+        self.spawn_map = np.where(self.fitness_map > self.spawn_threshold, True, False)
         
     def create_noise_map(self):
         self.noise_map_size = self.terrain_size // self.vegetation.distance
@@ -70,6 +73,9 @@ class Spawner:
         jittered_x = np.clip(jittered_x, 0, max_index)
         jittered_y = np.clip(jittered_y, 0, max_index)
         
+        self.positions_x = jittered_x 
+        self.positions_y = jittered_y
+        
         return jittered_x, jittered_y
         
     def create_base_axes(self):
@@ -80,13 +86,17 @@ class Spawner:
         # base axis coordinates for plant spawning (center point of each possible spawn cell on the terrain)
         base_x = np.arange(CELL_COUNT)[None, :] * self.vegetation.distance + CELL_CENTER_OFFSET # row vector 
         base_y = base_x.T   # col vector
+        
+        self.base_x = base_x
+        self.base_y = base_y
+        
         return base_x, base_y
     
     def sample_terrain_heights(self):
-        self.real_heightmap = self.terrain[self.positions_y, self.positions_x]
+        self.spawn_points_heightmap = self.terrain[self.positions_y, self.positions_x]
         
     def create_valid_height_mask(self):
-        return (self.real_heightmap >= self.vegetation.min_height) & (self.real_heightmap <= self.vegetation.max_height)
+        return (self.spawn_points_heightmap >= self.vegetation.min_height) & (self.spawn_points_heightmap <= self.vegetation.max_height)
     
     def create_random_variance(self):
         return self.rng.uniform(-self.vegetation.variance, self.vegetation.variance, size=self.noise_map.shape)
