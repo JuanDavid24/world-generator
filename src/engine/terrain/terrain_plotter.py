@@ -24,10 +24,18 @@ class Map_plotter:
             plt.colorbar()
         plt.show()
 
-    def plot_map(self, map, min=-1, max=1, title="Maps"):
+    def plot_map(self, map, min=-1, max=1, title="Map"):
+        self.plot_heightmap(map, min, max, title)
+        plt.show()
+    
+    def plot_heightmap(self, map, min=-1, max=1, title="Map"):
         plt.title(title)
         plt.imshow(map, cmap=self.color_map, vmin=min, vmax=max)
         plt.colorbar()
+        
+    def plot_map_with_spawn_points(self, map, spawn_points_x, spawn_points_y, min=-1, max=1, title="Map with spawn points"):
+        self.plot_heightmap(map, min, max, title)
+        plt.plot(spawn_points_x, spawn_points_y, 'gx')
         plt.show()
         
     

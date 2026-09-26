@@ -112,19 +112,8 @@ class Spawner:
         
         # fitness map generation
         base_fitness = self.noise_map + random_variance 
-        self.fitness_map = np.where(valid_height_mask, base_fitness, INVALID_HEIGHT_PENALTY)   
+        self.fitness_map = np.where(valid_height_mask, base_fitness, INVALID_HEIGHT_PENALTY)    # strict penalty applied to out-of-range heights
         
-    def create_spawn_map(self):
-        self.spawn_map = np.where(self.fitness_map > self.spawn_threshold, True, False)
-        
-    # def create_spawn_map(self):
-    #     NOISE_MAP_THRESHOLD = 1 - self.vegetation.cover
-        
-    #     spawn_map = np.zeros((self.noise_map_size, self.noise_map_size))
-    #     self.fitness() # create random spawn matrix for randomize tree spawn
-        
-    #     spawn_map = np.where(self.noise_map + self.fitness_matrix > NOISE_MAP_THRESHOLD, 1, 0)
-    #     self.spawn_map = spawn_map
-        
-    # def fitness(self):
-    #     self.fitness_matrix = self.rng.uniform(-0.15, 0.15, size=(self.noise_map.shape[0], self.noise_map.shape[0]))
+    def get_spawn_positions(self):
+        self.spawn_positions_x = self.positions_x[self.spawn_map]
+        self.spawn_positions_y = self.positions_y[self.spawn_map]
