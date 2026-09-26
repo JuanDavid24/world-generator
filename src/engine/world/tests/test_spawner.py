@@ -47,6 +47,9 @@ def dynamic_spawner_big(multi_terrain_big, multi_vegetation):
 
 # --- tests ---
 def test_noise_map_shape(dynamic_spawner_dummy):
+    # preconditions
+    dynamic_spawner_dummy.create_noise_map()
+    
     terrain_size = dynamic_spawner_dummy.terrain_size
     distance = dynamic_spawner_dummy.vegetation.distance
     
@@ -57,6 +60,9 @@ def test_noise_map_shape(dynamic_spawner_dummy):
     assert dynamic_spawner_dummy.noise_map.shape == expected_noise_shape
 
 def test_base_axes(dynamic_spawner_dummy):
+    # preconditions
+    dynamic_spawner_dummy.create_noise_map()
+    
     # generate base axes
     base_x, base_y = dynamic_spawner_dummy.create_base_axes()
     
@@ -75,6 +81,11 @@ def test_base_axes(dynamic_spawner_dummy):
     assert np.allclose(base_y, expected_base_y)
     
 def test_jittered_positions(dynamic_spawner_dummy):
+    # preconditions
+    dynamic_spawner_dummy.create_noise_map()
+    dynamic_spawner_dummy.create_base_axes()
+    dynamic_spawner_dummy.create_jittered_positions()
+    
     # generate jittered x and y matrix
     jittered_positions_x, jittered_positions_y = dynamic_spawner_dummy.create_jittered_positions()
     
@@ -93,6 +104,12 @@ def test_jittered_positions(dynamic_spawner_dummy):
     assert positions_y_in_bound
     
 def test_valid_height_mask(dynamic_spawner):
+    # preconditions
+    dynamic_spawner.create_noise_map()
+    dynamic_spawner.create_base_axes()
+    dynamic_spawner.create_jittered_positions()
+    dynamic_spawner.sample_terrain_heights()
+    
     height_mask = dynamic_spawner.create_valid_height_mask()
     noise_map_shape = dynamic_spawner.noise_map.shape
 
@@ -101,20 +118,26 @@ def test_valid_height_mask(dynamic_spawner):
 
     min_h = dynamic_spawner.vegetation.min_height
     max_h = dynamic_spawner.vegetation.max_height
-    real_heightmap = dynamic_spawner.real_heightmap
+    spawn_points_heightmap = dynamic_spawner.spawn_points_heightmap
     
     # check content validates real heightmap values
-    for y in range(len(real_heightmap)):
-        for x in range(len(real_heightmap)):
-            if min_h <= real_heightmap[y, x] <= max_h:
+    for y in range(len(spawn_points_heightmap)):
+        for x in range(len(spawn_points_heightmap)):
+            if min_h <= spawn_points_heightmap[y, x] <= max_h:
                 assert height_mask[y, x]
             else: 
                 assert not height_mask[y, x]
     
 def test_sample_spawn_points(dynamic_spawner):
+    # preconditions
+    dynamic_spawner.create_noise_map()
+    dynamic_spawner.create_base_axes()
+    dynamic_spawner.create_jittered_positions()
+    dynamic_spawner.sample_terrain_heights()
+        
     positions_x = dynamic_spawner.positions_x
     positions_y = dynamic_spawner.positions_y
-    sampled_heightmap = dynamic_spawner.real_heightmap
+    spawn_points_heightmap = dynamic_spawner.spawn_points_heightmap
     terrain = dynamic_spawner.terrain
     
     expected = terrain[positions_y, positions_x]
@@ -122,14 +145,19 @@ def test_sample_spawn_points(dynamic_spawner):
     #     for cell_col in range(positions_x.shape[1] -1): 
     #         x = positions_x[cell_col, cell_row]
     #         y = positions_y[cell_col, cell_row]
-    #         assert np.allclose(sampled_heightmap[y, x], terrain[y, x])
-    assert np.allclose(sampled_heightmap, expected)
+    #         assert np.allclose(spawn_points_heightmap[y, x], terrain[y, x])
+    assert np.allclose(spawn_points_heightmap, expected)
     
 def test_fitness_map(dynamic_spawner):
-    # generate fitness
-    # dynamic_spawner.vegetation.max_jitter = 2.0
+    # preconditions
+    dynamic_spawner.create_noise_map()
+    dynamic_spawner.create_base_axes()
+    dynamic_spawner.create_jittered_positions()
+    dynamic_spawner.sample_terrain_heights()
     dynamic_spawner.create_fitness_map()
-    fitness_map = dynamic_spawner.fitness_map
+    
+    # generate fitness
+    fitness_map = dynamic_spawner.fitness_map   
     fitness_shape = fitness_map.shape
 
     # assert same shape as noise map
@@ -138,7 +166,7 @@ def test_fitness_map(dynamic_spawner):
     
     # check values
     noise_map = dynamic_spawner.noise_map
-    real_heightmap = dynamic_spawner.real_heightmap
+    spawn_points_heightmap = dynamic_spawner.spawn_points_heightmap
     min_h = dynamic_spawner.vegetation.min_height
     max_h = dynamic_spawner.vegetation.max_height
     var = dynamic_spawner.vegetation.variance
@@ -146,7 +174,7 @@ def test_fitness_map(dynamic_spawner):
     
     for y in range(noise_map_shape[0]):
         for x in range(noise_map_shape[1]):
-            if min_h <= real_heightmap[y, x] <= max_h:
+            if min_h <= spawn_points_heightmap[y, x] <= max_h:
                 assert(is_valid_fitness(fitness_map[y, x], 
                                         noise_map[y, x],
                                         var))
