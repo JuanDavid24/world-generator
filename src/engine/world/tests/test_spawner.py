@@ -26,7 +26,7 @@ def multi_terrain_dummy(request):
     return request.param
 
 @pytest.fixture(params=TERRAIN_DATA)
-def multi_terrain_basic(request):
+def multi_terrain(request):
     return request.param
 
 @pytest.fixture(params=DISTANCE_DATA)
@@ -38,12 +38,8 @@ def dynamic_spawner_dummy(multi_terrain_dummy, multi_vegetation):
     return Spawner(terrain=multi_terrain_dummy, vegetation=multi_vegetation, seed=123)
 
 @pytest.fixture
-def dynamic_spawner(multi_terrain_basic, multi_vegetation):
-    return Spawner(terrain=multi_terrain_basic, vegetation=multi_vegetation, seed=123)
-
-@pytest.fixture
-def dynamic_spawner_big(multi_terrain_big, multi_vegetation):
-    return Spawner(terrain=multi_terrain_big, vegetation=multi_vegetation, seed=123)
+def dynamic_spawner(multi_terrain, multi_vegetation):
+    return Spawner(terrain=multi_terrain, vegetation=multi_vegetation, seed=123)
 
 # --- tests ---
 def test_noise_map_shape(dynamic_spawner_dummy):
@@ -174,7 +170,7 @@ def test_fitness_map(dynamic_spawner):
     
     for y in range(noise_map_shape[0]):
         for x in range(noise_map_shape[1]):
-            if min_h <= spawn_points_heightmap[y, x] <= max_h:
+            if is_valid_height(spawn_points_heightmap[y, x], min_h, max_h):
                 assert(is_valid_fitness(fitness_map[y, x], 
                                         noise_map[y, x],
                                         var))
@@ -183,3 +179,24 @@ def test_fitness_map(dynamic_spawner):
     
 def is_valid_fitness(f, base_f, variance):
     return base_f - variance <= f <= base_f + variance
+
+def test_spawn_map(dynamic_spawner):
+    dynamic_spawner.create_spawn_map()
+    
+    # check shape
+    spawn_map = dynamic_spawner.spawn_map
+    noise_map = dynamic_spawner.noise_map
+    assert(spawn_map.shape == noise_map.shape)
+    
+    # check valid heights
+    spawn_points_heightmap = dynamic_spawner.spawn_points_heightmap
+    min_h = dynamic_spawner.vegetation.min_height
+    max_h = dynamic_spawner.vegetation.max_height
+    
+    for y in range(spawn_map.shape[0]):
+        for x in range(spawn_map.shape[1]):
+            if not is_valid_height(spawn_points_heightmap[y, x], min_h, max_h):
+                assert(not spawn_map[y, x])
+    
+def is_valid_height(h, min_h, max_h):
+    return min_h <= h <= max_h
