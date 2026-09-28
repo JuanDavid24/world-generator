@@ -35,7 +35,7 @@ class Spawner:
         self.sample_terrain_heights()
         self.create_fitness_map()
         
-        self.spawn_map = np.where(self.fitness_map > self.spawn_threshold, True, False)
+        self.spawn_map = self.fitness_map > self.spawn_threshold
         
     def create_noise_map(self):
         self.noise_map_size = self.terrain_size // self.vegetation.distance
