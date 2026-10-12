@@ -1,7 +1,8 @@
 from engine.terrain.diamond_square import diamond_square as ds
 from engine.terrain.perlin_noise import generate_perlin_map
-from engine.world.spawner import Spawner, Vegetation_params
 from engine.terrain.terrain_plotter import Map_plotter
+from engine.world.spawner import Spawner, Vegetation_params
+from engine.world.vegetation_prototyper import Vegetation_prototyper, Plant_genes, Plant_prototype
 
 # ----- spawner -----
 TERRAIN_SIZE = TERRAIN_SIZE = 256
@@ -33,3 +34,13 @@ terrain_plt.plot_map_with_spawn_points(map=spawner.terrain,
                                        spawn_points_x=spawner.spawn_positions_x,
                                        spawn_points_y=spawner.spawn_positions_y,
                                        title=f"Vegetation terrain with vegetation spawning points, seed={spawner.seed}, vegetation params={spawner.vegetation}")
+
+# ----- vegetation prototyper -----
+GENES_FULL = Plant_genes(lsys_id="dense bush", iterations=3, default_angle=24, angle_variation=3, seed=123)
+GENES_NO_DEFAULT_ANGLE = Plant_genes(lsys_id="dense bush", iterations=3, angle_variation=3, seed=123)
+GENES_NO_ANGLEVAR_NO_SEED = Plant_genes(lsys_id="dense bush", iterations=3, default_angle=24)
+
+# list of mock genes with valid data
+GENES_DATA_OK = [GENES_FULL, GENES_NO_DEFAULT_ANGLE, GENES_NO_ANGLEVAR_NO_SEED]
+
+prototyper = Vegetation_prototyper(GENES_DATA_OK)
