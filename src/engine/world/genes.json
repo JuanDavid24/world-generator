@@ -1,0 +1,56 @@
+{
+  "biome": {
+    "jungle": {
+      "vegetation": {
+        "genes": [
+          {
+            "lsys_id": "dense_bush",
+            "iterations": 3,
+            "weight": 2,
+            "variants": [
+              {
+                "default_angle": 22.5,
+                "angle_variability": 3,
+                "weight": 1
+              }
+            ]
+          },
+          {
+            "lsys_id": "symmetrical_tree",
+            "iterations": 3,
+            "weight": 1,
+            "variants": [
+              {
+                "default_angle": 22.5,
+                "angle_variability": 3,
+                "weight": 1
+              },
+              {
+                "default_angle": 25,
+                "angle_variability": 0,
+                "weight": 1
+              }
+            ]
+          },
+          {
+            "lsys_id": "symmetrical_tree",
+            "iterations": 4,
+            "weight": 1,
+            "variants": [
+              {
+                "default_angle": 22.5,
+                "angle_variability": 3,
+                "weight": 1
+              },
+              {
+                "default_angle": 25,
+                "angle_variability": 0,
+                "weight": 1
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
