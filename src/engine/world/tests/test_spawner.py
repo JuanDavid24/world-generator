@@ -137,11 +137,6 @@ def test_sample_spawn_points(dynamic_spawner):
     terrain = dynamic_spawner.terrain
     
     expected = terrain[positions_y, positions_x]
-    # for cell_row in range(positions_x.shape[0] -1):
-    #     for cell_col in range(positions_x.shape[1] -1): 
-    #         x = positions_x[cell_col, cell_row]
-    #         y = positions_y[cell_col, cell_row]
-    #         assert np.allclose(spawn_points_heightmap[y, x], terrain[y, x])
     assert np.allclose(spawn_points_heightmap, expected)
     
 def test_fitness_map(dynamic_spawner):
