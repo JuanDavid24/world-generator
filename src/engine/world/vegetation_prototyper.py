@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import engine.vegetation.l_systems as lsys
 import engine.vegetation.data.lsys_examples as data
@@ -8,6 +8,7 @@ class Plant_variant:
     default_angle: int | None = None
     angle_variation: int = 0
     weight: int = 1
+    id: int = field(init=False, default=None)
     
 @dataclass
 class Plant_genes:
@@ -16,24 +17,23 @@ class Plant_genes:
     variants: list[Plant_variant]
     seed: int | None = None
     weight: int = 1
-    
-    
+
 @dataclass
 class Plant_prototype:
     genes: Plant_genes
     lsys_output: str
-    probability: float | None = None
-    id: str | None = None
+    probability: float = field(init=False)
+    id: int = field(init=False)
     
-    # creates prototype id and variant ids
-    def crete_ids(self):
+    def __post_init__(self):
+        # creates prototype id and variant ids
         self.create_id()
         self.create_variant_ids()
-    
+        
     # creates prototype id from genes available data as: {l_system_name}_{number_of_iterations}_{seed}
     def create_id(self):
-        id_fixed = self.genes.lsys_id + self.genes.iterations
-        id_seed = "" if self.seed is None else str(self.seed)
+        id_fixed = self.genes.lsys_id + str(self.genes.iterations)
+        id_seed = "" if self.genes.seed is None else str(self.genes.seed)
         self.id = id_fixed + id_seed
     
     # creates ids for plant variants as: {prototype_id}_{variant_index}
@@ -41,38 +41,27 @@ class Plant_prototype:
         for i, variant in enumerate(self.genes.variants):
             variant.id = self.id + str(i)
 
-dataclass
+@dataclass
 class Plant_pool:
-    prototypes: list[Plant_prototype] = []
-    roll_thresholds: list[float] = []
+    prototypes: list[Plant_prototype] = field(default_factory=list)
+    roll_thresholds: list[float] = field(init=False)
     
 @dataclass
 class Vegetation_prototyper:
     species: list[Plant_genes]
-    
-    # def __post_init__(self):
-    #     self.calculate_probability_offset()
-        
-    def calculate_probability_offset():
-        self.prob_max_deviation = 1 / len(genes) * .25
+    pool: Plant_pool = field(init=False)
     
     def generate_pool(self):
-        self.pool = Plant_pool()
-        
+        prototypes = []
         for genes in self.species:
             new_protoype = self.generate_prototype(genes)
-            self.pool.append(new_protoype)
+            prototypes.append(new_protoype)
+        self.pool = Plant_pool(prototypes)
     
     def generate_prototype(self, genes):
         lsys_output = self.generate_lsys_for_genes(genes)
         return Plant_prototype(genes, lsys_output)
-    
-    # def get_lsys_data(self, genes):
-    #     # get lsys from dataset
-    #     lsys_data = 
-    #     return lsys_data
-    
-        
+         
     def generate_lsys_for_genes(self, genes):
         # get lsys from dataset
         lsys_data = data.get_lsys_by_id(genes.lsys_id)
