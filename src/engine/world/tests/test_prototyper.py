@@ -39,4 +39,15 @@ def test_generate_prototype(prototyper, lsys_output_expected):
     prototype = prototyper.generate_prototype(GENES_FULL)
     assert prototype.genes == GENES_FULL
     
+    # assert prototype lsys output
     assert prototype.lsys_output == lsys_output_expected
+    
+    # assert prototype id
+    expected_prototype_id = GENES_FULL.lsys_id + str(GENES_FULL.iterations)
+    assert prototype.id == expected_prototype_id
+    
+    # assert variant ids
+    for i in range(len(GENES_FULL.variants)):
+        expected_var_id = expected_prototype_id + str(i)
+        variany_id = prototype.genes.variants[i].id
+        assert variany_id == expected_var_id
