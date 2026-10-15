@@ -55,11 +55,27 @@ def test_generate_prototype(prototyper, lsys_output_expected):
     expected_prototype_id = GENES_FULL.lsys_id + "_" + str(GENES_FULL.iterations) + expected_prototype_id_seed
     assert prototype.id == expected_prototype_id
     
-    # assert variant ids
+    # assert variant probs sum be equal to 1
+    probs_sum = sum(prototype.variant_probs)
+    assert np.isclose(probs_sum, 1)
+    
+    # check variant probs calculation
+    variants = prototype.genes.variants
+    weights = np.array([v.weight for v in variants])
+    check_probs_with_weights(prototype.variant_probs, weights)
+    
+    # check variant ids
     for i in range(len(GENES_FULL.variants)):
         expected_var_id = expected_prototype_id + "_" + str(i)
         variany_id = prototype.genes.variants[i].id
         assert variany_id == expected_var_id
+   
+# aux function to check list of probabilities against weights
+def check_probs_with_weights(probs, weights):
+    weight_sum = sum(weights)
+    for i, prob in enumerate(probs):
+        expected_prob = weights[i] / weight_sum
+        assert np.isclose(prob, expected_prob)
         
 def test_generate_pool(prototyper, pool):
     for i in range(len(pool.prototypes)):
@@ -76,15 +92,20 @@ def test_pool_initialization(pool):
     # check rng
     assert isinstance(pool.rng, np.random._generator.Generator) 
     
+    # assert prototype probs sum be equal to 1
+    probs_sum = sum(pool.prototype_probs)
+    assert np.isclose(probs_sum, 1)
+    
+    # check variant probs calculation
+    prototypes = pool.prototypes
+    weights = np.array([prot.genes.weight for prot in prototypes])
+    check_probs_with_weights(pool.prototype_probs, weights)
+     
 def test_pool(pool):
     # check random index picking
     RANDS = [0, 2, 3, 5]
     # expected index results = [0, 1, 2, 3]
     # variant weights = [1, 1, 1, 2]
-    for i in range(len(RANDS)):
-        found_index = pool.pick_item_index_weighted(RANDS[i], VARIANTS)
-        expected_index = i # expected index results = [0, 1, 2, 3]
-        assert found_index == expected_index
         
     # check get random plant
     output_plant = pool.get_random_plant()
