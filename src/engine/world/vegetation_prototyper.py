@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-
+import numpy as np
 import engine.vegetation.l_systems as lsys
 import engine.vegetation.data.lsys_examples as data
  
@@ -22,7 +22,6 @@ class Plant_genes:
 class Plant_prototype:
     genes: Plant_genes
     lsys_output: str
-    probability: float = field(init=False)
     id: int = field(init=False)
     
     def __post_init__(self):
@@ -32,20 +31,71 @@ class Plant_prototype:
         
     # creates prototype id from genes available data as: {l_system_name}_{number_of_iterations}_{seed}
     def create_id(self):
-        id_fixed = self.genes.lsys_id + str(self.genes.iterations)
-        id_seed = "" if self.genes.seed is None else str(self.genes.seed)
-        self.id = id_fixed + id_seed
+        id_fixed = self.genes.lsys_id + "_" + str(self.genes.iterations)
+        id_seed = "" if self.genes.seed is None else "_" + str(self.genes.seed)
+        self.id = id_fixed  + id_seed
     
     # creates ids for plant variants as: {prototype_id}_{variant_index}
     def create_variant_ids(self):
         for i, variant in enumerate(self.genes.variants):
-            variant.id = self.id + str(i)
+            variant.id = self.id + "_" + str(i)
 
+@dataclass
+class Plant_result:
+    prototype: Plant_prototype
+    variant_index: int = 0
+    
 @dataclass
 class Plant_pool:
     prototypes: list[Plant_prototype] = field(default_factory=list)
-    roll_thresholds: list[float] = field(init=False)
+    seed: int | None = None
+    rng: np.random._generator.Generator = field(init=False)
+    weight_sum: int = field(init=False)
     
+    def __post_init__(self):
+        self.calculate_weight_sum()
+        self.initialize_rng()
+        
+    def initialize_rng(self):
+        if self.seed is None:
+            # Create a random seed between 0 and 2^31
+            self.seed = np.random.randint(0, 2**31)
+        self.rng = np.random.default_rng(self.seed) 
+    
+    def calculate_weight_sum(self):
+        self.weight_sum = sum([p.genes.weight for p in self.prototypes])
+    
+    def get_random_plant(self):
+        # get random prototype
+        genes_list = [p.genes for p in self.prototypes]
+        prototype_index = self.get_random_index(self.rng, self.weight_sum, genes_list)
+        picked_prototype = self.prototypes[prototype_index]
+        
+        # get a random variant of picked prototype
+        variants = picked_prototype.genes.variants
+        variant_index = 0
+        if len(variants) > 1:
+            variant_weight_sum = sum([v.weight for v in variants])
+            variant_index = self.get_random_index(self.rng, variant_weight_sum, variants)
+        
+        return Plant_result(picked_prototype, variant_index)
+    
+    def get_random_index(self, rng, weight_sum, items):
+        # roll random number from zero to weight_sum + 1
+        rand = rng.integers(weight_sum + 1)
+        
+        # find index of rolled element
+        found_index = self.pick_item_index_weighted(rand, items)
+        return found_index
+
+    def pick_item_index_weighted(self, search_value, items):
+        found_index = 0
+        for i, item in enumerate(items):
+            search_value -= item.weight # decrement search_value by element weight
+            if search_value <= 0:
+                found_index = i
+                break
+        return found_index
 @dataclass
 class Vegetation_prototyper:
     species: list[Plant_genes]
