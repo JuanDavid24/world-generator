@@ -23,11 +23,13 @@ class Plant_prototype:
     genes: Plant_genes
     lsys_output: str
     id: int = field(init=False)
+    variant_probs : np.ndarray = field(init=False)
     
     def __post_init__(self):
         # creates prototype id and variant ids
         self.create_id()
         self.create_variant_ids()
+        self.calculate_variant_probs()
         
     # creates prototype id from genes available data as: {l_system_name}_{number_of_iterations}_{seed}
     def create_id(self):
@@ -39,6 +41,13 @@ class Plant_prototype:
     def create_variant_ids(self):
         for i, variant in enumerate(self.genes.variants):
             variant.id = self.id + "_" + str(i)
+    
+    def calculate_variant_probs(self):
+        # get variant weight list
+        weights = np.array([v.weight for v in self.genes.variants])
+        
+        # calculate all variant probabilities at once 
+        self.variant_probs = weights / weights.sum()
 
 @dataclass
 class Plant_result:
@@ -50,11 +59,12 @@ class Plant_pool:
     prototypes: list[Plant_prototype] = field(default_factory=list)
     seed: int | None = None
     rng: np.random._generator.Generator = field(init=False)
-    weight_sum: int = field(init=False)
+    prototype_probs : np.ndarray = field(init=False)
     
     def __post_init__(self):
         self.calculate_weight_sum()
         self.initialize_rng()
+        self.calculate_prototype_probs()
         
     def initialize_rng(self):
         if self.seed is None:
@@ -65,37 +75,30 @@ class Plant_pool:
     def calculate_weight_sum(self):
         self.weight_sum = sum([p.genes.weight for p in self.prototypes])
     
+    def calculate_prototype_probs(self):
+        # get genes weight list
+        weights = np.array([p.genes.weight for p in self.prototypes])
+        
+        # calculate all prototype probabilities at once 
+        self.prototype_probs = weights / weights.sum()
+    
     def get_random_plant(self):
-        # get random prototype
+        # get normalized probabilities for prototypes
         genes_list = [p.genes for p in self.prototypes]
         prototype_index = self.get_random_index(self.rng, self.weight_sum, genes_list)
-        picked_prototype = self.prototypes[prototype_index]
+        
+        picked_prototype = self.rng.choice(self.prototypes, p=self.prototype_probs)
         
         # get a random variant of picked prototype
         variants = picked_prototype.genes.variants
+        variant_count = len(variants)
+        
         variant_index = 0
         if len(variants) > 1:
-            variant_weight_sum = sum([v.weight for v in variants])
-            variant_index = self.get_random_index(self.rng, variant_weight_sum, variants)
+            self.rng.choice(variant_count, p=picked_prototype.variant_probs)
         
         return Plant_result(picked_prototype, variant_index)
-    
-    def get_random_index(self, rng, weight_sum, items):
-        # roll random number from zero to weight_sum + 1
-        rand = rng.integers(weight_sum + 1)
-        
-        # find index of rolled element
-        found_index = self.pick_item_index_weighted(rand, items)
-        return found_index
 
-    def pick_item_index_weighted(self, search_value, items):
-        found_index = 0
-        for i, item in enumerate(items):
-            search_value -= item.weight # decrement search_value by element weight
-            if search_value <= 0:
-                found_index = i
-                break
-        return found_index
 @dataclass
 class Vegetation_prototyper:
     species: list[Plant_genes]
@@ -137,4 +140,3 @@ class Vegetation_prototyper:
             # default_angle assignation
             if variant.default_angle is None:
                 variant.default_angle = lsys_data["default_angle"]
-        
