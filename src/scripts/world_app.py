@@ -1,8 +1,12 @@
+import pprint
+
 from engine.terrain.diamond_square import diamond_square as ds
 from engine.terrain.perlin_noise import generate_perlin_map
 from engine.terrain.terrain_plotter import Map_plotter
+import engine.world.tests.prototyper_data as pd
 from engine.world.spawner import Spawner, Vegetation_params
-from engine.world.vegetation_prototyper import Vegetation_prototyper, Plant_genes, Plant_prototype
+from engine.world.vegetation_assembler import Vegetation_assembler
+from engine.world.vegetation_prototyper import Vegetation_prototyper, Plant_genes, Plant_variant, Plant_prototype, Plant_pool, Plant_result
 
 # ----- spawner -----
 TERRAIN_SIZE = TERRAIN_SIZE = 256
@@ -19,28 +23,33 @@ SPAWN_SEED = 3
 
 terrain_plt = Map_plotter()
 terrain, seed = generate_perlin_map(shape=(TERRAIN_SIZE, TERRAIN_SIZE), scale=TERRAIN_SCALE, seed=TERRAIN_SEED)
-terrain_plt.plot_map(terrain, min=-1, max=1, title=f"Perlin Map Terrain, seed={TERRAIN_SEED}") 
 
+def plot_map():
+    terrain_plt.plot_map(terrain, min=-1, max=1, title=f"Perlin Map Terrain, seed={TERRAIN_SEED}") 
+# plot_map()
+
+# ----- vegetation spawner -----
 spawner = Spawner(terrain, VEGETATION, SPAWN_SEED)
 spawner.create_spawn_map()
 spawner.get_spawn_positions()
 
-terrain_plt.plot_map(spawner.noise_map, min=-1, max=1, title=f"Perlin Map Vegetation Spawner, noise_map with seed={spawner.seed}") 
+def plot_spawner():    
+    terrain_plt.plot_map(spawner.noise_map, min=-1, max=1, title=f"Perlin Map Vegetation Spawner, noise_map with seed={spawner.seed}") 
 
-spawn_plotter = Map_plotter(["black", "yellowgreen"], [0, 1])
-spawn_plotter.plot_map(spawner.spawn_map, min=-0, max=2, title=f"Vegetation spawn map, seed={spawner.seed}, vegetation cover={spawner.vegetation.cover}")
+    spawn_plotter = Map_plotter(["black", "yellowgreen"], [0, 1])
+    spawn_plotter.plot_map(spawner.spawn_map, min=-0, max=2, title=f"Vegetation spawn map, seed={spawner.seed}, vegetation cover={spawner.vegetation.cover}")
 
-terrain_plt.plot_map_with_spawn_points(map=spawner.terrain, 
-                                       spawn_points_x=spawner.spawn_positions_x,
-                                       spawn_points_y=spawner.spawn_positions_y,
-                                       title=f"Vegetation terrain with vegetation spawning points, seed={spawner.seed}, vegetation params={spawner.vegetation}")
-
+    terrain_plt.plot_map_with_spawn_points(map=spawner.terrain, 
+                                    spawn_points_x=spawner.spawn_positions_x,
+                                    spawn_points_y=spawner.spawn_positions_y,
+                                    title=f"Vegetation terrain with vegetation spawning points, seed={spawner.seed}, vegetation params={spawner.vegetation}")
+# plot_spawner()
 # ----- vegetation prototyper -----
-GENES_FULL = Plant_genes(lsys_id="dense bush", iterations=3, default_angle=24, angle_variation=3, seed=123)
-GENES_NO_DEFAULT_ANGLE = Plant_genes(lsys_id="dense bush", iterations=3, angle_variation=3, seed=123)
-GENES_NO_ANGLEVAR_NO_SEED = Plant_genes(lsys_id="dense bush", iterations=3, default_angle=24)
 
-# list of mock genes with valid data
-GENES_DATA_OK = [GENES_FULL, GENES_NO_DEFAULT_ANGLE, GENES_NO_ANGLEVAR_NO_SEED]
+prototyper = Vegetation_prototyper(pd.GENES_DATA_OK)
+prototyper.generate_pool()
+pool = prototyper.pool
 
-prototyper = Vegetation_prototyper(GENES_DATA_OK)
+# ----- vegetation assembler -----
+vegetation_assembler = Vegetation_assembler(spawner, pool)
+pprint.pp(vegetation_assembler.prototypes_payload)
