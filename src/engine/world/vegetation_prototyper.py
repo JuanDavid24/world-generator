@@ -83,10 +83,6 @@ class Plant_pool:
         self.prototype_probs = weights / weights.sum()
     
     def get_random_plant(self):
-        # get normalized probabilities for prototypes
-        genes_list = [p.genes for p in self.prototypes]
-        prototype_index = self.get_random_index(self.rng, self.weight_sum, genes_list)
-        
         picked_prototype = self.rng.choice(self.prototypes, p=self.prototype_probs)
         
         # get a random variant of picked prototype
