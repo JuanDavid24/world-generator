@@ -35,7 +35,7 @@ class Plant_prototype:
     def create_id(self):
         id_fixed = self.genes.lsys_id + "_" + str(self.genes.iterations)
         id_seed = "" if self.genes.seed is None else "_" + str(self.genes.seed)
-        self.id = id_fixed  + id_seed
+        self.id = id_fixed + id_seed
     
     # creates ids for plant variants as: {prototype_id}_{variant_index}
     def create_variant_ids(self):
@@ -95,7 +95,7 @@ class Plant_pool:
         
         variant_index = 0
         if len(variants) > 1:
-            self.rng.choice(variant_count, p=picked_prototype.variant_probs)
+            variant_index = self.rng.choice(variant_count, p=picked_prototype.variant_probs)
         
         return Plant_result(picked_prototype, variant_index)
 
