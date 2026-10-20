@@ -53,3 +53,4 @@ pool = prototyper.pool
 # ----- vegetation assembler -----
 vegetation_assembler = Vegetation_assembler(spawner, pool)
 pprint.pp(vegetation_assembler.prototypes_payload)
+pprint.pp(vegetation_assembler.instances_payload)

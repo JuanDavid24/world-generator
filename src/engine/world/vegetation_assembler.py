@@ -16,6 +16,7 @@ class Vegetation_assembler:
         
     def initialize_dictionaries(self):
         for proto in self.pool.prototypes:
+            # prototypes payload initialization
             variants = proto.genes.variants_to_dict()
             
             self.prototypes_payload[proto.id] = {
@@ -28,8 +29,14 @@ class Vegetation_assembler:
                 "variants": variants,
                 "sentence": proto.lsys_output
             }
-                
-        # for v in proto.genes.variants:
-        #     self.prototypes_payload[proto.id]["variants"].append(
-        #         asdict(v)
-        #     )
+            
+            # instances payload initialization
+            for v in variants:
+                variant_id = v["id"]
+                self.instances_payload[variant_id] = {
+                        "count": 0,
+                        "positions": [],
+                        "normals": [],
+                        "yaws": [],
+                        "scales": []
+                    }
