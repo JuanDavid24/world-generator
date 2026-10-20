@@ -16,14 +16,16 @@ class Vegetation_assembler:
         
     def initialize_dictionaries(self):
         for proto in self.pool.prototypes:
+            variants = proto.genes.variants_to_dict()
+            
             self.prototypes_payload[proto.id] = {
                 "metadata": {
                     "algorithm": "l_system",
                     "type": "determinist",                    
                     "size": len(proto.lsys_output)
                 },
-                "genes": asdict(proto.genes),
-                "variants": [],
+                "genes": proto.genes.to_dict(),
+                "variants": variants,
                 "sentence": proto.lsys_output
             }
                 

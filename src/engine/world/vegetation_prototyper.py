@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 import numpy as np
 import engine.vegetation.l_systems as lsys
 import engine.vegetation.data.lsys_examples as data
@@ -17,6 +17,15 @@ class Plant_genes:
     variants: list[Plant_variant]
     seed: int | None = None
     weight: int = 1
+    
+    def to_dict(self):
+        new_dict = asdict(self)
+        new_dict.pop("variants")
+        return new_dict
+    
+    def variants_to_dict(self):
+        new_dict = asdict(self)["variants"]
+        return new_dict
 
 @dataclass
 class Plant_prototype:
