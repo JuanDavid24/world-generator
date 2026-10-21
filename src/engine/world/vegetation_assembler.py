@@ -13,6 +13,7 @@ class Vegetation_assembler:
     
     def __post_init__(self):
         self.initialize_dictionaries()
+        self.populate_instances()
         
     def initialize_dictionaries(self):
         for proto in self.pool.prototypes:
@@ -40,3 +41,30 @@ class Vegetation_assembler:
                         "yaws": [],
                         "scales": []
                     }
+    
+    def populate_instances(self):
+        xs = self.spawner.spawn_positions_x
+        ys = self.spawner.spawn_positions_y
+        zs = self.spawner.spawn_positions_h
+
+        for (x, y, z) in zip(xs, ys, zs):
+            # get random plant
+            plant = self.pool.get_random_plant()
+            
+            # get variant id
+            variant_id = plant.prototype.genes.variants[plant.variant_index].id
+            
+            # calculate normal            
+            normal = [0.0, 1.0, 0.0]    # placeholder
+            
+            # calculate random yaw and scale    
+            rng = self.pool.rng     # use pool rng
+            yaw = rng.uniform(0, 2 * np.pi)         
+            scale = rng.uniform(0.85, 1.15)
+            
+            # save results in instances payload
+            self.instances_payload[variant_id]["count"] += 1
+            self.instances_payload[variant_id]["positions"].extend([x, y, z])
+            self.instances_payload[variant_id]["normals"].extend(normal)
+            self.instances_payload[variant_id]["yaws"].append(yaw)
+            self.instances_payload[variant_id]["scales"].append(scale)

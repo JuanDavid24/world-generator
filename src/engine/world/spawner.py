@@ -115,5 +115,9 @@ class Spawner:
         self.fitness_map = np.where(valid_height_mask, base_fitness, INVALID_HEIGHT_PENALTY)    # strict penalty applied to out-of-range heights
         
     def get_spawn_positions(self):
+        # arrays with x and y spawn positions
         self.spawn_positions_x = self.positions_x[self.spawn_map]
         self.spawn_positions_y = self.positions_y[self.spawn_map]
+        
+        # array of heights of valid spawn points
+        self.spawn_positions_h = self.spawn_points_heightmap[self.spawn_map]
