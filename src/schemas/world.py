@@ -1,14 +1,14 @@
 from pydantic import BaseModel
-from .terrain import Perlin_params, Diamond_square_params
-from engine.world.vegetation_prototyper import Plant_genes
+from .terrain import PerlinParams, DiamondSquareParams
+from engine.world.vegetation_prototyper import PlantGenes
 
-class Terrain_Params(BaseModel):
+class TerrainParams(BaseModel):
     algorithm: str
-    params: Perlin_params | Diamond_square_params
+    params: PerlinParams | DiamondSquareParams
     
-class Vegetation_Params(BaseModel):
-    genes: list[Plant_genes]
+class VegetationParams(BaseModel):
+    genes: list[PlantGenes]
     
-class World_Params(BaseModel):
-    terrain: Terrain_Params
-    vegetation: Vegetation_Params
+class WorldParams(BaseModel):
+    terrain: TerrainParams
+    vegetation: VegetationParams

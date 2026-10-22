@@ -4,12 +4,12 @@ import pytest
 import engine.world.tests.prototyper_data as pd
 import engine.vegetation.data.lsys_examples as data
 import engine.vegetation.l_systems as lsys
-from engine.world.vegetation_prototyper import Vegetation_prototyper
+from engine.world.vegetation_prototyper import VegetationPrototyper
 
 # --- fixtures ---
 @pytest.fixture
 def prototyper():
-    return Vegetation_prototyper(pd.GENES_DATA_OK)
+    return VegetationPrototyper(pd.GENES_DATA_OK)
 
 @pytest.fixture
 def lsys_output_expected():

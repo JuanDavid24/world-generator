@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 
-class Map_plotter:
+class MapPlotter:
     def __init__(self, 
                  colors = ["darkblue", "blue", "sandybrown", "yellowgreen", "olivedrab", "saddlebrown", "snow"],
                  positions = [0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0]):

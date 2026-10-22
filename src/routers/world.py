@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from schemas.world import World_Params, Terrain_Params, Vegetation_Params
+from schemas.world import WorldParams, TerrainParams, VegetationParams
 from services.world import process_world
 
 router = APIRouter(
@@ -8,7 +8,7 @@ router = APIRouter(
 )
 
 @router.post("/")
-async def world_route(terrain: Terrain_Params, vegetation: Vegetation_Params):
+async def world_route(terrain: TerrainParams, vegetation: VegetationParams):
     terrain_args = terrain.model_dump()  # model to dict
     vegetation_args = vegetation # model to dict
 

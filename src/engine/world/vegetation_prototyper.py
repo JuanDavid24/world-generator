@@ -4,17 +4,17 @@ import engine.vegetation.l_systems as lsys
 import engine.vegetation.data.lsys_examples as data
  
 @dataclass
-class Plant_variant:
+class PlantVariant:
     default_angle: float | None = None
     angle_variation: float = 0.0
     weight: int = 1
     id: int = field(init=False, default=None)
     
 @dataclass
-class Plant_genes:
+class PlantGenes:
     lsys_id: str
     iterations: int
-    variants: list[Plant_variant]
+    variants: list[PlantVariant]
     seed: int | None = None
     weight: int = 1
     
@@ -28,8 +28,8 @@ class Plant_genes:
         return new_dict
 
 @dataclass
-class Plant_prototype:
-    genes: Plant_genes
+class PlantPrototype:
+    genes: PlantGenes
     lsys_output: str
     id: int = field(init=False)
     variant_probs : np.ndarray = field(init=False)
@@ -59,13 +59,13 @@ class Plant_prototype:
         self.variant_probs = weights / weights.sum()
 
 @dataclass
-class Plant_result:
-    prototype: Plant_prototype
+class PlantResult:
+    prototype: PlantPrototype
     variant_index: int = 0
     
 @dataclass
-class Plant_pool:
-    prototypes: list[Plant_prototype] = field(default_factory=list)
+class PlantPool:
+    prototypes: list[PlantPrototype] = field(default_factory=list)
     seed: int | None = None
     rng: np.random._generator.Generator = field(init=False)
     prototype_probs : np.ndarray = field(init=False)
@@ -102,23 +102,23 @@ class Plant_pool:
         if len(variants) > 1:
             variant_index = self.rng.choice(variant_count, p=picked_prototype.variant_probs)
         
-        return Plant_result(picked_prototype, variant_index)
+        return PlantResult(picked_prototype, variant_index)
 
 @dataclass
-class Vegetation_prototyper:
-    species: list[Plant_genes]
-    pool: Plant_pool = field(init=False)
+class VegetationPrototyper:
+    species: list[PlantGenes]
+    pool: PlantPool = field(init=False)
     
     def generate_pool(self):
         prototypes = []
         for genes in self.species:
             new_protoype = self.generate_prototype(genes)
             prototypes.append(new_protoype)
-        self.pool = Plant_pool(prototypes)
+        self.pool = PlantPool(prototypes)
     
     def generate_prototype(self, genes):
         lsys_output = self.generate_lsys_for_genes(genes)
-        return Plant_prototype(genes, lsys_output)
+        return PlantPrototype(genes, lsys_output)
          
     def generate_lsys_for_genes(self, genes):
         # get lsys from dataset

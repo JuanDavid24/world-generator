@@ -1,6 +1,6 @@
-from engine.world.spawner import Spawn_params, Spawner
-from engine.world.vegetation_assembler import Vegetation_assembler
-from engine.world.vegetation_prototyper import Vegetation_prototyper
+from engine.world.spawner import SpawnParams, Spawner
+from engine.world.vegetation_assembler import VegetationAssembler
+from engine.world.vegetation_prototyper import VegetationPrototyper
 from services.terrain import get_perlin_map, process_perlin_terrain, process_diamond_square_terrain
 from src.utils.logger import format_terrain_data
 
@@ -20,7 +20,7 @@ def process_world(terrain_args, vegetation_args, debug=False):
     MAX_HEIGHT = 0.55
     MAX_JITTER = 1.5
     VARIANCE = 0.35
-    VEGETATION = Spawn_params(DISTANCE, VEGETATION_COVER, MAX_JITTER, VARIANCE, MIN_HEIGHT, MAX_HEIGHT)
+    VEGETATION = SpawnParams(DISTANCE, VEGETATION_COVER, MAX_JITTER, VARIANCE, MIN_HEIGHT, MAX_HEIGHT)
     # SPAWN_SEED # --> pasar en el req
     
     # # ----- vegetation spawner -----
@@ -30,13 +30,13 @@ def process_world(terrain_args, vegetation_args, debug=False):
         
     # # ----- vegetation prototyper -----
 
-    prototyper = Vegetation_prototyper(vegetation_args.genes)
+    prototyper = VegetationPrototyper(vegetation_args.genes)
 
     prototyper.generate_pool()
     pool = prototyper.pool
     
     # # ----- vegetation assembler -----
-    vegetation_assembler = Vegetation_assembler(spawner, pool)
+    vegetation_assembler = VegetationAssembler(spawner, pool)
     
     vegetation_data = {
         "prototypes": vegetation_assembler.prototypes_payload,

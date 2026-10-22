@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 import engine.world.tests.prototyper_data as pd
-from engine.world.vegetation_assembler import Vegetation_assembler
+from engine.world.vegetation_assembler import VegetationAssembler
 from .test_spawner import dynamic_spawner, multi_terrain, multi_vegetation
 from .test_prototyper import pool, prototyper
 
@@ -11,7 +11,7 @@ from .test_prototyper import pool, prototyper
 def assembler(dynamic_spawner, pool):
     dynamic_spawner.create_spawn_map()
     dynamic_spawner.get_spawn_positions()
-    return Vegetation_assembler(dynamic_spawner, pool)
+    return VegetationAssembler(dynamic_spawner, pool)
 
 # --- tests ---
 def test_initialize_dictionaries(assembler, pool):

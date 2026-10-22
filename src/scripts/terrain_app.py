@@ -1,6 +1,6 @@
 from engine.terrain.diamond_square import diamond_square as ds
 from engine.terrain.perlin_noise import generate_perlin_map
-from engine.terrain.terrain_plotter import Map_plotter
+from engine.terrain.terrain_plotter import MapPlotter
 from engine.utils.timer import Timer
 # ----- perlin noise -----
 scales = [100, 200, 400, 800]
@@ -9,7 +9,7 @@ seeds = [1, 2, 3, 4]
 persistences = [0.3, 0.5, 0.7, 0.9]
 lacunarities = [2, 4, 6, 8]
 
-plt = Map_plotter()
+plt = MapPlotter()
 timer = Timer()
 
 # single map plot, random seed, normalized vs not

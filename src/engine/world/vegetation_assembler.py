@@ -2,12 +2,12 @@ from dataclasses import dataclass, field, asdict
 import numpy as np
 
 from .spawner import Spawner
-from .vegetation_prototyper import Plant_pool
+from .vegetation_prototyper import PlantPool
 
 @dataclass
-class Vegetation_assembler:
+class VegetationAssembler:
     spawner: Spawner
-    pool: Plant_pool
+    pool: PlantPool
     prototypes_payload: dict = field(default_factory=dict)
     instances_payload: dict = field(default_factory=dict)
     
