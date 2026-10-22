@@ -5,8 +5,8 @@ import engine.vegetation.data.lsys_examples as data
  
 @dataclass
 class Plant_variant:
-    default_angle: int | None = None
-    angle_variation: int = 0
+    default_angle: float | None = None
+    angle_variation: float = 0.0
     weight: int = 1
     id: int = field(init=False, default=None)
     
