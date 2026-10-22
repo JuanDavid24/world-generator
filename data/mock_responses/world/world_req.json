@@ -1,56 +1,64 @@
 {
-  "biome": {
-    "jungle": {
-      "vegetation": {
-        "genes": [
+  "terrain": {
+    "algorithm": "perlin_noise",
+    "params": {
+      "seed": 123,
+      "size": 256,
+      "scale": 1,
+      "octaves": 3,
+      "persistence": 0.5,
+      "lacunarity": 2
+    }
+  },
+  "vegetation": {
+    "genes": [
+      {
+        "lsys_id": "dense_bush",
+        "iterations": 3,
+        "weight": 2,
+        "variants": [
           {
-            "lsys_id": "dense_bush",
-            "iterations": 3,
-            "weight": 2,
-            "variants": [
-              {
-                "default_angle": 22.5,
-                "angle_variability": 3,
-                "weight": 1
-              }
-            ]
+            "default_angle": 22.5,
+            "angle_variability": 3,
+            "weight": 1
+          }
+        ]
+      },
+      
+      {
+        "lsys_id": "symmetrical_tree",
+        "iterations": 3,
+        "weight": 1,
+        "variants": [
+          {
+            "default_angle": 22.5,
+            "angle_variability": 3,
+            "weight": 1
           },
           {
-            "lsys_id": "symmetrical_tree",
-            "iterations": 3,
-            "weight": 1,
-            "variants": [
-              {
-                "default_angle": 22.5,
-                "angle_variability": 3,
-                "weight": 1
-              },
-              {
-                "default_angle": 25,
-                "angle_variability": 0,
-                "weight": 1
-              }
-            ]
+            "default_angle": 25,
+            "angle_variability": 0,
+            "weight": 1
+          }
+        ]
+      },
+      {
+        "lsys_id": "symmetrical_tree",
+        "iterations": 4,
+        "weight": 1,
+        "variants": [
+          {
+            "default_angle": 22.5,
+            "angle_variability": 3,
+            "weight": 1
           },
           {
-            "lsys_id": "symmetrical_tree",
-            "iterations": 4,
-            "weight": 1,
-            "variants": [
-              {
-                "default_angle": 22.5,
-                "angle_variability": 3,
-                "weight": 1
-              },
-              {
-                "default_angle": 25,
-                "angle_variability": 0,
-                "weight": 1
-              }
-            ]
+            "default_angle": 25,
+            "angle_variability": 0,
+            "weight": 1
           }
         ]
       }
-    }
+    ]
   }
 }
