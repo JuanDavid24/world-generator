@@ -5,7 +5,7 @@ from engine.terrain.perlin_noise import generate_perlin_map
 from engine.terrain.normalize import normalize_map
 
 @dataclass
-class Vegetation_params:
+class Spawn_params:
     distance: int
     cover: float = 0.5
     max_jitter: float | None = None
@@ -20,7 +20,7 @@ class Vegetation_params:
             self.variance = 0.15
     
 class Spawner:
-    def __init__(self, terrain, vegetation: Vegetation_params, seed=None):
+    def __init__(self, terrain, vegetation: Spawn_params, seed=None):
         self.terrain = terrain
         self.terrain_size = self.terrain.shape[0]
         self.vegetation = vegetation

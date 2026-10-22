@@ -4,7 +4,7 @@ from engine.terrain.diamond_square import diamond_square as ds
 from engine.terrain.perlin_noise import generate_perlin_map
 from engine.terrain.terrain_plotter import Map_plotter
 import engine.world.tests.prototyper_data as pd
-from engine.world.spawner import Spawner, Vegetation_params
+from engine.world.spawner import Spawner, Spawn_params
 from engine.world.vegetation_assembler import Vegetation_assembler
 from engine.world.vegetation_prototyper import Vegetation_prototyper, Plant_genes, Plant_variant, Plant_prototype, Plant_pool, Plant_result
 
@@ -18,7 +18,7 @@ MIN_HEIGHT = -0.2
 MAX_HEIGHT = 0.55
 MAX_JITTER = 1.5
 VARIANCE = 0.35
-VEGETATION = Vegetation_params(DISTANCE, VEGETATION_COVER, MAX_JITTER, VARIANCE, MIN_HEIGHT, MAX_HEIGHT)
+VEGETATION_SPAWN = Spawn_params(DISTANCE, VEGETATION_COVER, MAX_JITTER, VARIANCE, MIN_HEIGHT, MAX_HEIGHT)
 SPAWN_SEED = 3
 
 terrain_plt = Map_plotter()
@@ -29,7 +29,7 @@ def plot_map():
 # plot_map()
 
 # ----- vegetation spawner -----
-spawner = Spawner(terrain, VEGETATION, SPAWN_SEED)
+spawner = Spawner(terrain, VEGETATION_SPAWN, SPAWN_SEED)
 spawner.create_spawn_map()
 spawner.get_spawn_positions()
 

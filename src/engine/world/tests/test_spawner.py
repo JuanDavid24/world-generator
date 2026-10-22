@@ -3,7 +3,7 @@ import pytest
 
 from engine.terrain import diamond_square as ds
 from engine.terrain import perlin_noise as pn
-from engine.world.spawner import Spawner, Vegetation_params
+from engine.world.spawner import Spawner, Spawn_params
 
 # --- dataset ---
 TERRAIN_DATA_DUMMY = [      # mock terrain of zeros
@@ -31,7 +31,7 @@ def multi_terrain(request):
 
 @pytest.fixture(params=DISTANCE_DATA)
 def multi_vegetation(request):
-    return Vegetation_params(distance=request.param, cover=0.7)
+    return Spawn_params(distance=request.param, cover=0.7)
 
 @pytest.fixture
 def dynamic_spawner_dummy(multi_terrain_dummy, multi_vegetation):
