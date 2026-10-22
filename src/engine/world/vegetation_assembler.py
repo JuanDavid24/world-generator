@@ -55,7 +55,7 @@ class Vegetation_assembler:
             variant_id = plant.prototype.genes.variants[plant.variant_index].id
             
             # calculate normal            
-            normal = [0.0, 1.0, 0.0]    # placeholder
+            nx, ny, nz = 0.0, 1.0, 0.0    # placeholder
             
             # calculate random yaw and scale    
             rng = self.pool.rng     # use pool rng
@@ -64,7 +64,7 @@ class Vegetation_assembler:
             
             # save results in instances payload
             self.instances_payload[variant_id]["count"] += 1
-            self.instances_payload[variant_id]["positions"].extend([x, y, z])
-            self.instances_payload[variant_id]["normals"].extend(normal)
-            self.instances_payload[variant_id]["yaws"].append(yaw)
-            self.instances_payload[variant_id]["scales"].append(scale)
+            self.instances_payload[variant_id]["positions"].extend([float(x), float(y), float(z)])
+            self.instances_payload[variant_id]["normals"].extend([float(nx), float(ny), float(nz)])
+            self.instances_payload[variant_id]["yaws"].append(float(yaw))
+            self.instances_payload[variant_id]["scales"].append(float(scale))
