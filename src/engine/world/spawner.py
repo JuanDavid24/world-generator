@@ -1,6 +1,6 @@
 import numpy as np
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from engine.terrain.perlin_noise import generate_perlin_map
 from engine.terrain.normalize import normalize_map
 
@@ -19,14 +19,25 @@ class SpawnParams:
         if self.variance is None:
             self.variance = 0.15
     
+@dataclass
 class Spawner:
-    def __init__(self, terrain, vegetation: SpawnParams, seed=None):
-        self.terrain = terrain
+    terrain: np.ndarray
+    vegetation: SpawnParams
+    seed: int | None = None
+    terrain_size: int = field(init=False)
+    rng: np.random.Generator = field(init=False)
+    spawn_threshold: float = field(init=False)
+    
+    def __post_init__(self):
         self.terrain_size = self.terrain.shape[0]
-        self.vegetation = vegetation
-        self.seed = seed
-        self.rng = np.random.default_rng(seed) # Initialize random number generator with seed
+        self.initialize_rng()
         self.spawn_threshold = 1 - self.vegetation.cover
+        
+    def initialize_rng(self):
+        if self.seed is None:
+            # Create a random seed between 0 and 2^31
+            self.seed = np.random.randint(0, 2**31)
+        self.rng = np.random.default_rng(self.seed)
         
     def create_spawn_map(self):
         self.create_noise_map()
