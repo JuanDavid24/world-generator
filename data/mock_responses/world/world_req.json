@@ -11,6 +11,14 @@
     }
   },
   "vegetation": {
+    "spawn": {
+      "distance": 8,
+      "vegetation_cover": 0.7,
+      "min_height": -0.2,
+      "max_height": 0.55,
+      "max_jitter": 1.5,
+      "variance": 0.35
+    },
     "genes": [
       {
         "lsys_id": "dense_bush",
