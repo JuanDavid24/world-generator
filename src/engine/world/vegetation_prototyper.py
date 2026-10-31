@@ -69,6 +69,7 @@ class PlantPool:
     seed: int | None = None
     rng: np.random._generator.Generator = field(init=False)
     prototype_probs : np.ndarray = field(init=False)
+    weight_sum: int = field(init=False)
     
     def __post_init__(self):
         self.calculate_weight_sum()
